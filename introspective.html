@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Demesne | Introspective Scaffold</title>
+    <style>
+        :root {
+            --menlo: 'Menlo', monospace;
+            --bg: #080c14;
+            --text: rgba(255, 255, 255, 0.95);
+            --text-dim: rgba(255, 255, 255, 0.7);
+            --glow-cyan: rgba(64, 224, 208, 0.85);
+            --glow-blue: rgba(64, 128, 255, 0.85);
+            --glow-purple: rgba(192, 64, 255, 0.85);
+            --glow-green: rgba(64, 255, 128, 0.5);
+            --glow-red: rgba(255, 64, 64, 0.5);
+        }
+        
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        body {
+            font-family: var(--menlo);
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.5;
+            padding: 2rem;
+        }
+        
+        .introspection-panel {
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            background: rgba(0, 0, 0, 0.2);
+        }
+        
+        .status {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+        
+        .status-ok { 
+            background: var(--glow-green);
+            box-shadow: 0 0 8px var(--glow-green);
+            animation: pulse 2s infinite;
+        }
+        
+        .status-error { 
+            background: var(--glow-red);
+            box-shadow: 0 0 8px var(--glow-red);
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 0.8; }
+            50% { opacity: 1; }
+            100% { opacity: 0.8; }
+        }
+        
+        .metric {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+        
+        .metric-label {
+            flex: 1;
+            color: var(--text-dim);
+        }
+        
+        .code {
+            font-family: var(--menlo);
+            background: rgba(0, 0, 0, 0.3);
+            padding: 0.5rem;
+            border-radius: 4px;
+            margin: 0.5rem 0;
+            overflow-x: auto;
+        }
+        
+        .info {
+            color: var(--glow-blue);
+        }
+        
+        .warning {
+            color: var(--glow-red);
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <!-- Introspection results will be inserted here -->
+    </div>
+
+    <script>
+        class SystemIntrospector {
+            constructor() {
+                this.results = {};
+                this.app = document.getElementById('app');
+            }
+            
+            async inspect() {
+                // Browser environment
+                this.checkEnvironment();
+                
+                // Network status
+                await this.checkConnectivity();
+                
+                // Source code inspection
+                this.inspectSource();
+                
+                // Git repository check
+                await this.checkRepository();
+                
+                // Service worker support
+                this.checkServiceWorker();
+                
+                // Render results
+                this.render();
+            }
+            
+            checkEnvironment() {
+                this.results.environment = {
+                    type: 'Environment',
+                    metrics: [
+                        ['Runtime', window ? 'Browser' : 'Unknown'],
+                        ['User Agent', navigator.userAgent],
+                        ['Platform', navigator.platform],
+                        ['Language', navigator.language],
+                        ['Screen', `${window.screen.width}x${window.screen.height}`],
+                        ['Viewport', `${window.innerWidth}x${window.innerHeight}`]
+                    ]
+                };
+            }
+            
+            async checkConnectivity() {
+                this.results.connectivity = {
+                    type: 'Connectivity',
+                    metrics: [
+                        ['Online', navigator.onLine ? 'Yes' : 'No'],
+                        ['Protocol', window.location.protocol],
+                        ['Host', window.location.host]
+                    ]
+                };
+                
+                try {
+                    const start = performance.now();
+                    await fetch('https://api.github.com/zen');
+                    const latency = Math.round(performance.now() - start);
+                    this.results.connectivity.metrics.push(['GitHub Latency', `${latency}ms`]);
+                } catch (e) {
+                    this.results.connectivity.metrics.push(['GitHub Access', 'Failed']);
+                }
+            }
+            
+            inspectSource() {
+                const scripts = document.getElementsByTagName('script');
+                this.results.source = {
+                    type: 'Source Code',
+                    metrics: [
+                        ['Scripts', scripts.length],
+                        ['Inline Scripts', Array.from(scripts).filter(s => !s.src).length],
+                        ['External Scripts', Array.from(scripts).filter(s => s.src).length]
+                    ]
+                };
+            }
+            
+            async checkRepository() {
+                this.results.repository = {
+                    type: 'Git Repository',
+                    metrics: []
+                };
+                
+                const repoPath = window.location.pathname.split('/')[1];
+                if (repoPath) {
+                    try {
+                        const response = await fetch(`https://api.github.com/repos/${repoPath}`);
+                        if (response.ok) {
+                            const repo = await response.json();
+                            this.results.repository.metrics = [
+                                ['Repository', repo.full_name],
+                                ['Visibility', repo.private ? 'Private' : 'Public'],
+                                ['Last Update', new Date(repo.updated_at).toLocaleString()],
+                                ['Stars', repo.stargazers_count],
+                                ['Forks', repo.forks_count]
+                            ];
+                        }
+                    } catch (e) {
+                        this.results.repository.metrics.push(['Status', 'Not found']);
+                    }
+                }
+            }
+            
+            checkServiceWorker() {
+                this.results.serviceWorker = {
+                    type: 'Service Worker',
+                    metrics: [
+                        ['Supported', 'serviceWorker' in navigator ? 'Yes' : 'No']
+                    ]
+                };
+                
+                if ('serviceWorker' in navigator) {
+                    navigator.serviceWorker.getRegistrations().then(regs => {
+                        this.results.serviceWorker.metrics.push(
+                            ['Active Workers', regs.length]
+                        );
+                        this.render();
+                    });
+                }
+            }
+            
+            render() {
+                this.app.innerHTML = Object.values(this.results)
+                    .map(section => this.renderSection(section))
+                    .join('');
+            }
+            
+            renderSection({ type, metrics }) {
+                return `
+                    <div class="introspection-panel">
+                        <h2>
+                            <span class="status ${metrics.some(m => m[1] === 'No' || m[1] === 'Failed') ? 'status-error' : 'status-ok'}"></span>
+                            ${type}
+                        </h2>
+                        ${metrics.map(([label, value]) => `
+                            <div class="metric">
+                                <span class="metric-label">${label}:</span>
+                                <span class="metric-value">${value}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+            }
+        }
+
+        // Initialize and run introspection
+        const introspector = new SystemIntrospector();
+        introspector.inspect();
+
+        // Add live network status updates
+        window.addEventListener('online', () => introspector.inspect());
+        window.addEventListener('offline', () => introspector.inspect());
+    </script>
+</body>
+</html>
