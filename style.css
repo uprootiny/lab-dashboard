@@ -633,3 +633,58 @@ header {
         box-shadow: 0 0 20px var(--glow-color);
     }
 }
+
+
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+    .backdrop-blur-xl {
+        backdrop-filter: blur(16px);
+    }
+}
+
+.container {
+    max-width: 1400px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+
+.project-card {
+    transition: transform 0.2s ease-in-out;
+}
+
+.project-card:hover {
+    transform: translateY(-2px);
+}
+
+.metric-bar {
+    height: 8px;
+    border-radius: 4px;
+    overflow: hidden;
+    background-color: #374151;
+}
+
+.metric-fill {
+    height: 100%;
+    transition: width 0.3s ease-in-out;
+}
+
+.tech-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: 9999px;
+    font-size: 0.875rem;
+    line-height: 1.5;
+}
+
+.nav-link {
+    display: flex;
+    align-items: center;
+    gap: 0.5
