@@ -4,26 +4,30 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Penelope Literary Magazine</title>
-    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+
+    <!-- Load React and ReactDOM -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+
+    <!-- Load Lucide Icons (properly as a module) -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+
+    <!-- Load Tailwind CSS (optional, for styling) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Load your JSX component as a module -->
+    <script type="module" src="PenelopeLiteraryMagazine.jsx"></script>
 </head>
 <body>
     <div id="root"></div>
 
-    <!-- Load JSX -->
-    <script type="text/babel" src="PenelopeLiteraryMagazine.jsx"></script>
+    <!-- Render the component using ES modules -->
+    <script type="module">
+        import PenelopeLiteraryMagazine from './PenelopeLiteraryMagazine.jsx';
+        import { createRoot } from 'react-dom/client';
 
-    <!-- Render the component after loading -->
-    <script type="text/babel">
-        window.onload = () => {
-            ReactDOM.createRoot(document.getElementById("root")).render(
-                <React.StrictMode>
-                    <window.PenelopeLiteraryMagazine />
-                </React.StrictMode>
-            );
-        };
+        const root = createRoot(document.getElementById('root'));
+        root.render(<PenelopeLiteraryMagazine />);
     </script>
 </body>
 </html>
