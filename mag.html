@@ -6,10 +6,24 @@
     <title>Penelope Literary Magazine</title>
     <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
 </head>
 <body>
     <div id="root"></div>
+
+    <!-- Load JSX -->
     <script type="text/babel" src="PenelopeLiteraryMagazine.jsx"></script>
+
+    <!-- Render the component after loading -->
+    <script type="text/babel">
+        window.onload = () => {
+            ReactDOM.createRoot(document.getElementById("root")).render(
+                <React.StrictMode>
+                    <window.PenelopeLiteraryMagazine />
+                </React.StrictMode>
+            );
+        };
+    </script>
 </body>
 </html>
