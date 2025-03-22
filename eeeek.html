@@ -601,6 +601,7 @@
                                 </svg>
                                 Projects Overview
                             </a>
+                            
                         </li>
                         <li class="nav-item">
                             <a href="#deployment" class="nav-link">
@@ -882,7 +883,111 @@
 
                     </div>
                 </section>
+<!-- System Diagnostics section -->
+<section id="diagnostics" class="dashboard-section">
+  <div class="section-header">
+    <h2 class="section-title">System Session Diagnostics</h2>
+    <p class="section-subtitle">Live session summary, issues, and suggested remediations</p>
+  </div>
 
+  <div class="project-card">
+    <div class="project-header">
+      <h3 class="project-name">DNS Resolution</h3>
+      <span class="project-score score-10">Offline</span>
+    </div>
+    <div class="project-content">
+      <p class="project-path">/etc/resolv.conf</p>
+
+      <div class="metrics-grid">
+        <div class="metric-item">
+          <div class="metric-label">Nameservers</div>
+          <div class="metric-value">::1, 127.0.0.1</div>
+        </div>
+        <div class="metric-item">
+          <div class="metric-label">Status</div>
+          <div class="metric-value" style="color:#ef4444;">Broken</div>
+        </div>
+        <div class="metric-item">
+          <div class="metric-label">Resolution</div>
+          <div class="metric-value">Temporary Failure</div>
+        </div>
+        <div class="metric-item">
+          <div class="metric-label">Fixable</div>
+          <div class="metric-value" style="color:#4ade80;">Yes</div>
+        </div>
+      </div>
+
+      <div class="tech-stack">
+        <span class="tech-tag">DNS</span>
+        <span class="tech-tag">Networking</span>
+        <span class="tech-tag">Systemd</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="project-card">
+    <div class="project-header">
+      <h3 class="project-name">Suggested Fix</h3>
+      <span class="project-score score-60">Quick Apply</span>
+    </div>
+    <div class="project-content">
+      <p class="project-path">Temporary DNS Override</p>
+
+      <div class="step-code">
+        <code>
+          sudo bash -c 'echo "nameserver 8.8.8.8" > /etc/resolv.conf'
+        </code>
+        <p class="code-comment"># Or enable systemd-resolved:</p>
+        <code>
+          sudo ln -sf /run/systemd/resolve/resolv.conf /etc/resolv.conf<br>
+          sudo systemctl restart systemd-resolved
+        </code>
+      </div>
+
+      <div class="tech-stack">
+        <span class="tech-tag">8.8.8.8</span>
+        <span class="tech-tag">cloudflare: 1.1.1.1</span>
+        <span class="tech-tag">systemd-resolved</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="project-card">
+    <div class="project-header">
+      <h3 class="project-name">Environment Summary</h3>
+      <span class="project-score score-70">Active</span>
+    </div>
+    <div class="project-content">
+      <p class="project-path">/home/uprootiny</p>
+
+      <div class="metrics-grid">
+        <div class="metric-item">
+          <div class="metric-label">Shell</div>
+          <div class="metric-value">bash</div>
+        </div>
+        <div class="metric-item">
+          <div class="metric-label">Editor</div>
+          <div class="metric-value">nano</div>
+        </div>
+        <div class="metric-item">
+          <div class="metric-label">AI Tools</div>
+          <div class="metric-value">aider, geist</div>
+        </div>
+        <div class="metric-item">
+          <div class="metric-label">Nix Shells</div>
+          <div class="metric-value">Active</div>
+        </div>
+      </div>
+
+      <div class="tech-stack">
+        <span class="tech-tag">Nix</span>
+        <span class="tech-tag">Python</span>
+        <span class="tech-tag">Go</span>
+        <span class="tech-tag">Clojure</span>
+      </div>
+    </div>
+  </div>
+</section>
                 <!-- Deployment section -->
                 <section id="deployment" class="deployment-section dashboard-section">
                     <div class="section-header">
