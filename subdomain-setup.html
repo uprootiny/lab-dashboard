@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Subdomain Not Assigned — Set Up Your Deployment</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <style>
+    body {
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background: #f5f7fa;
+      margin: 0;
+      padding: 2rem;
+      color: #333;
+    }
+    h1, h2 {
+      color: #2a2a2a;
+    }
+    pre {
+      background: #272822;
+      color: #f8f8f2;
+      padding: 1rem;
+      overflow-x: auto;
+    }
+    .section {
+      border: 1px solid #ccc;
+      background: #fff;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      border-radius: 8px;
+    }
+    input[type="text"] {
+      padding: 0.5rem;
+      font-size: 1rem;
+      width: 250px;
+      margin-right: 1rem;
+    }
+    button {
+      padding: 0.5rem 1rem;
+      font-size: 1rem;
+      background: #007acc;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #005fa3;
+    }
+    ul {
+      list-style: disc;
+      padding-left: 1.5rem;
+    }
+    a {
+      color: #007acc;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="section" id="instructions">
+    <h1>Unassigned Subdomain Detected</h1>
+    <p>
+      It appears this subdomain hasn’t been configured or assigned to a project yet. Follow the steps below to assign this subdomain and deploy your project.
+    </p>
+
+    <h2>1. Install & Configure the Required CLI Tools</h2>
+    <p>
+      Make sure you have the following tools installed:
+    </p>
+    <ul>
+      <li><strong>llm:</strong> CLI tool for language model operations. (Install with <code>pip install --user llm</code>.)</li>
+      <li><strong>ollama:</strong> CLI for handling models and chat operations.
+        (<code>curl -O https://ollama.com/install.sh && bash install.sh</code>)</li>
+      <li><strong>NixOps:</strong> For deployments (<code>nix-env -iA nixops</code>).</li>
+    </ul>
+
+    <h2>2. Update DNS Settings</h2>
+    <p>
+      Point your subdomain (e.g., <code>yourproject.example.com</code>) to the server’s IP address. Use your DNS provider’s dashboard:
+    </p>
+    <ul>
+      <li>
+        <a href="https://www.cloudflare.com/" target="_blank">Cloudflare</a> (requires an API key)
+      </li>
+      <li>
+        <a href="https://aws.amazon.com/route53/" target="_blank">AWS Route53</a>
+      </li>
+      <li>
+        <a href="https://developers.google.com/domains" target="_blank">Google Domains</a>
+      </li>
+    </ul>
+
+    <h2>3. Deploy Your Project</h2>
+    <p>
+      Ensure your project is ready inside your working directory (e.g., <code>~/March/mumerai/my-nixops-project</code>). Then deploy by running:
+    </p>
+    <pre>
+# Switch to your project shell
+nix-shell:~/March/mumerai/my-nixops-project$ 
+
+# Deploy your configuration using NixOps
+nixops deploy -d my-deployment.nixops
+    </pre>
+  </div>
+
+  <div class="section" id="cli-snippets">
+    <h2>Common CLI Invocations</h2>
+    <p>
+      Here are some useful CLI snippets to get you started. Copy & paste these commands as needed:
+    </p>
+    <pre>
+# Install the llm tool (if missing)
+pip install --user llm
+
+# Verify llm is installed
+llm --help
+
+# List available commands in ollama
+ollama --help
+
+# Create and run a model (replace 'mymodel' with your project model)
+ollama create mymodel -f Modelfile
+ollama run mymodel
+    </pre>
+  </div>
+
+  <div class="section" id="interactive-widget">
+    <h2>Interactive Subdomain Assignment</h2>
+    <p>
+      Enter the subdomain you want to assign and get your configuration snippet:
+    </p>
+    <input type="text" id="subdomain" name="subdomain" placeholder="e.g., blog, app, demo">
+    <button onclick="assignSubdomain()">Generate Config</button>
+    <pre id="configOutput" style="margin-top:1rem;"></pre>
+  </div>
+
+  <div class="section" id="helpful-links">
+    <h2>Additional Resources</h2>
+    <ul>
+      <li>
+        <a href="https://nixos.org/nixops/manual/" target="_blank">NixOps Documentation</a>
+      </li>
+      <li>
+        <a href="https://ollama.com/docs" target="_blank">Ollama CLI Guide</a>
+      </li>
+      <li>
+        <a href="https://docs.cloudflare.com" target="_blank">Cloudflare API & DNS Setup</a>
+      </li>
+      <li>
+        <a href="https://www.digitalocean.com/community/tutorials" target="_blank">General Deployment Tutorials</a>
+      </li>
+    </ul>
+  </div>
+
+  <script>
+    function assignSubdomain() {
+      var subdomain = document.getElementById("subdomain").value.trim();
+      var outputField = document.getElementById("configOutput");
+
+      if (!subdomain) {
+        outputField.textContent = "Please enter a valid subdomain.";
+        return;
+      }
+
+      // Sample snippet to add DNS TXT record and update your deployment configuration:
+      var snippet = 
+`# Update your DNS for ${subdomain}.yourdomain.com:
+# Create a TXT record pointing to the following value:
+assign-${subdomain}-project-key-<YOUR_API_KEY_HERE>
+
+# Then update your deployment config:
+subdomain = "${subdomain}.yourdomain.com"
+project    = "/home/youruser/path-to-your-project"
+deploy --subdomain ${subdomain}.yourdomain.com --project ${project}
+`;
+      outputField.textContent = snippet;
+    }
+  </script>
+
+  <footer style="text-align: center; margin-top: 2rem; font-size: 0.9rem;">
+    <p>&copy; 2023 Your DevOps Team. Happy Deploying!</p>
+  </footer>
+</body>
+</html>
