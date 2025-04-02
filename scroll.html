@@ -1295,7 +1295,8 @@
             
             // Initialize the experience
             function initialize() {
-              
+                loadingScreen.classList.add('hidden');
+
                 initializeTextDepths();
                 setupSubstitutions();
                 setupTranslations();
@@ -1308,7 +1309,6 @@
                 updateGlowIntensity();
                 updateColorScheme();
 
-                loadingScreen.classList.add('hidden');
 
             }
             
