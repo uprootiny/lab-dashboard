@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -34,6 +33,7 @@
       --glow-purple: rgba(150, 100, 255, 0.4);
       
       --transition-smooth: cubic-bezier(0.22, 1, 0.36, 1);
+      --transition-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
       --font-sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       --font-mono: "Menlo", "Monaco", "Consolas", monospace;
       --font-pali: "Arial Unicode MS", "Tahoma", serif;
@@ -48,6 +48,7 @@
       align-items: center;
       justify-content: center;
       overflow-x: hidden;
+      perspective: 1px;
     }
     
     /* ===== MOBILE CONTAINER ===== */
@@ -72,6 +73,9 @@
       overflow-x: hidden;
       scroll-behavior: smooth;
       position: relative;
+      scrollbar-width: thin;
+      scrollbar-color: var(--accent-cyan) rgba(255, 255, 255, 0.05);
+      scroll-snap-type: y proximity;
     }
     
     .content-area::-webkit-scrollbar {
@@ -98,7 +102,8 @@
       justify-content: center;
       z-index: 100;
       opacity: 1;
-      transition: opacity 0.8s var(--transition-smooth);
+      transition: opacity 0.8s var(--transition-smooth),
+                  transform 0.8s var(--transition-smooth);
       text-align: center;
       pointer-events: none;
     }
@@ -122,6 +127,7 @@
     
     .splash-screen.hide {
       opacity: 0;
+      transform: translateY(-20px);
     }
     
     .splash-screen.hide .splash-title {
@@ -136,6 +142,32 @@
     .section {
       padding: 2rem 1.5rem;
       margin-bottom: 1rem;
+      scroll-snap-align: start;
+      position: relative;
+      transform-style: preserve-3d;
+      overflow: hidden;
+    }
+    
+    .section::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(to right, 
+                 rgba(120, 210, 255, 0),
+                 rgba(120, 210, 255, 0.4),
+                 rgba(120, 210, 255, 0));
+      opacity: 0;
+      transform: translateY(-10px);
+      transition: opacity 0.6s var(--transition-smooth),
+                  transform 0.6s var(--transition-smooth);
+    }
+    
+    .section.visible::before {
+      opacity: 1;
+      transform: translateY(0);
     }
     
     .section-title {
@@ -144,6 +176,13 @@
       margin-bottom: 1rem;
       text-align: center;
       text-shadow: 0 0 8px var(--glow-cyan);
+      position: relative;
+      z-index: 2;
+      transition: text-shadow 0.6s var(--transition-smooth);
+    }
+    
+    .section-title:hover {
+      text-shadow: 0 0 15px var(--glow-cyan);
     }
     
     .section-subtitle {
@@ -152,6 +191,27 @@
       text-align: center;
       margin-bottom: 2rem;
       font-style: italic;
+      position: relative;
+      z-index: 2;
+    }
+    
+    .section-background {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at 50% 30%, 
+                  rgba(100, 200, 255, 0.08),
+                  rgba(100, 200, 255, 0) 70%);
+      opacity: 0;
+      transition: opacity 0.8s var(--transition-smooth);
+      z-index: 1;
+      pointer-events: none;
+    }
+    
+    .section.visible .section-background {
+      opacity: 1;
     }
     
     /* ===== NIDANA LIST ===== */
@@ -159,12 +219,22 @@
       list-style: none;
       margin: 0;
       padding: 0;
+      position: relative;
+      z-index: 2;
     }
     
     .nidana-item {
-      margin-bottom: 1rem;
+      margin-bottom: 1.5rem;
       transform-style: preserve-3d;
-      transition: transform 0.5s var(--transition-smooth);
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s var(--transition-smooth),
+                  transform 0.6s var(--transition-smooth);
+    }
+    
+    .nidana-item.visible {
+      opacity: 1;
+      transform: translateY(0);
     }
     
     /* ===== NIDANA CARD ===== */
@@ -174,8 +244,23 @@
       border-radius: 12px;
       overflow: hidden;
       position: relative;
-      transition: all 0.3s var(--transition-smooth);
+      transition: all 0.3s var(--transition-smooth),
+                  transform 0.3s var(--transition-bounce),
+                  box-shadow 0.3s var(--transition-smooth);
       transform-style: preserve-3d;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      will-change: transform, box-shadow;
+    }
+    
+    .nidana-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3),
+                 0 0 8px var(--glow-cyan);
+    }
+    
+    .nidana-card.expanded {
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3),
+                 0 0 15px var(--glow-cyan);
     }
     
     .nidana-card::before {
@@ -185,7 +270,12 @@
       background: linear-gradient(45deg, 
                   rgba(100, 200, 255, 0.05),
                   rgba(100, 200, 255, 0));
-      z-index: -1;
+      z-index: 0;
+      transition: opacity 0.3s var(--transition-smooth);
+    }
+    
+    .nidana-card:hover::before {
+      opacity: 1.5;
     }
     
     .nidana-header {
@@ -195,6 +285,11 @@
       cursor: pointer;
       position: relative;
       z-index: 2;
+      transition: background-color 0.3s var(--transition-smooth);
+    }
+    
+    .nidana-card.expanded .nidana-header {
+      background-color: rgba(100, 150, 255, 0.1);
     }
     
     .nidana-number {
@@ -203,9 +298,14 @@
       text-shadow: 0 0 6px var(--glow-blue);
       margin-right: 0.8rem;
       font-size: 1.2rem;
-      transition: color 0.3s ease;
+      transition: color 0.3s ease, text-shadow 0.3s ease;
       width: 1.8rem;
       text-align: center;
+    }
+    
+    .nidana-card:hover .nidana-number {
+      color: var(--accent-cyan);
+      text-shadow: 0 0 10px var(--glow-cyan);
     }
     
     .nidana-term {
@@ -214,8 +314,12 @@
       text-shadow: 0 0 6px var(--glow-gold);
       font-style: italic;
       margin-right: 0.8rem;
-      transition: color 0.3s ease;
+      transition: color 0.3s ease, text-shadow 0.3s ease;
       flex: 1;
+    }
+    
+    .nidana-card:hover .nidana-term {
+      text-shadow: 0 0 10px var(--glow-gold);
     }
     
     .nidana-meaning {
@@ -223,43 +327,57 @@
       margin-left: auto;
       font-size: 0.9rem;
       text-align: right;
+      transition: color 0.3s ease;
+    }
+    
+    .nidana-card:hover .nidana-meaning {
+      color: var(--text-primary);
     }
     
     .expand-icon {
       margin-left: 0.5rem;
-      transition: transform 0.3s var(--transition-smooth);
+      transition: transform 0.4s var(--transition-bounce);
       font-size: 1.2rem;
       width: 20px;
       display: flex;
       justify-content: center;
+      color: var(--text-secondary);
+    }
+    
+    .nidana-card:hover .expand-icon {
+      color: var(--text-primary);
     }
     
     .nidana-card.expanded .expand-icon {
       transform: rotate(180deg);
+      color: var(--accent-cyan);
     }
     
     /* ===== NIDANA CONTENT ===== */
     .nidana-content {
       height: 0;
       overflow: hidden;
-      transition: height 0.3s var(--transition-smooth);
+      transition: height 0.4s var(--transition-smooth);
       padding: 0 1rem;
       opacity: 0;
       transform: translateY(-10px);
-      transition: opacity 0.3s var(--transition-smooth),
-                  transform 0.3s var(--transition-smooth),
-                  height 0.3s var(--transition-smooth);
+      transition: opacity 0.4s var(--transition-smooth),
+                  transform 0.4s var(--transition-smooth),
+                  height 0.4s var(--transition-smooth);
+      position: relative;
+      z-index: 1;
     }
     
     .nidana-card.expanded .nidana-content {
       opacity: 1;
       transform: translateY(0);
-      padding-bottom: 1rem;
+      padding-bottom: 1.5rem;
     }
     
     .nidana-description {
       margin-bottom: 1rem;
-      line-height: 1.5;
+      line-height: 1.6;
+      position: relative;
     }
     
     /* ===== INTERACTIVE ELEMENTS ===== */
@@ -268,24 +386,86 @@
       cursor: pointer;
       position: relative;
       display: inline-block;
+      color: var(--accent-cyan);
+      transition: color 0.2s ease, text-shadow 0.2s ease;
+    }
+    
+    .glossable:hover {
+      color: var(--text-primary);
+      text-shadow: 0 0 5px var(--glow-cyan);
     }
     
     .canonical-quote {
-      margin: 1rem 0;
-      padding: 1rem;
+      margin: 1.2rem 0;
+      padding: 1.2rem;
       border-left: 3px solid var(--accent-gold);
       background: rgba(255, 200, 100, 0.05);
       position: relative;
       font-style: italic;
+      transform: translateX(0);
+      transition: transform 0.3s var(--transition-smooth),
+                  box-shadow 0.3s var(--transition-smooth),
+                  background 0.3s var(--transition-smooth);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      border-radius: 0 8px 8px 0;
+    }
+    
+    .canonical-quote:hover {
+      transform: translateX(5px);
+      background: rgba(255, 200, 100, 0.08);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15),
+                 0 0 10px var(--glow-gold);
+    }
+    
+    .canonical-quote::before {
+      content: """;
+      position: absolute;
+      top: 0.5rem;
+      left: 0.7rem;
+      font-size: 2.5rem;
+      color: var(--accent-gold);
+      opacity: 0.5;
+      font-style: normal;
     }
     
     .quote-source {
       display: block;
       text-align: right;
-      margin-top: 0.5rem;
+      margin-top: 0.8rem;
       font-size: 0.8rem;
       color: var(--text-tertiary);
       font-style: normal;
+      transition: color 0.3s ease;
+    }
+    
+    .canonical-quote:hover .quote-source {
+      color: var(--text-secondary);
+    }
+    
+    .access-link {
+      display: inline-block;
+      margin-top: 0.5rem;
+      color: var(--accent-cyan);
+      font-size: 0.8rem;
+      text-decoration: none;
+      opacity: 0.8;
+      transition: opacity 0.3s ease, transform 0.3s ease, text-shadow 0.3s ease;
+    }
+    
+    .access-link:hover {
+      opacity: 1;
+      transform: translateX(3px);
+      text-shadow: 0 0 5px var(--glow-cyan);
+    }
+    
+    .access-link::before {
+      content: "→ ";
+      display: inline-block;
+      transition: transform 0.3s ease;
+    }
+    
+    .access-link:hover::before {
+      transform: translateX(3px);
     }
     
     /* ===== TOOLTIP ===== */
@@ -300,15 +480,16 @@
       max-width: 280px;
       z-index: 101;
       opacity: 0;
-      transform: scale(0.95);
+      transform: scale(0.95) translateY(10px);
       transition: opacity 0.3s var(--transition-smooth),
-                  transform 0.3s var(--transition-smooth);
+                  transform 0.3s var(--transition-bounce);
       pointer-events: none;
+      backdrop-filter: blur(5px);
     }
     
     .tooltip.visible {
       opacity: 1;
-      transform: scale(1);
+      transform: scale(1) translateY(0);
       pointer-events: auto;
     }
     
@@ -316,17 +497,52 @@
       color: var(--accent-cyan);
       margin-bottom: 0.5rem;
       font-size: 1rem;
+      border-bottom: 1px solid rgba(100, 200, 255, 0.2);
+      padding-bottom: 0.4rem;
     }
     
     .tooltip-content {
       font-size: 0.9rem;
-      line-height: 1.4;
+      line-height: 1.5;
+      color: var(--text-secondary);
+    }
+    
+    .tooltip::after {
+      content: "";
+      position: absolute;
+      top: -8px;
+      left: 50%;
+      transform: translateX(-50%);
+      border-width: 0 8px 8px;
+      border-style: solid;
+      border-color: transparent transparent rgba(15, 20, 35, 0.98) transparent;
+      filter: drop-shadow(0 -2px 2px rgba(0, 0, 0, 0.1));
     }
     
     /* ===== EXPANDABLE CONCEPTS ===== */
     .expandable-concept {
-      margin: 1rem 0;
+      margin: 1.2rem 0;
       cursor: pointer;
+      background: rgba(150, 255, 180, 0.05);
+      border-radius: 8px;
+      padding: 0.8rem;
+      transition: background 0.3s var(--transition-smooth),
+                  box-shadow 0.3s var(--transition-smooth),
+                  transform 0.3s var(--transition-smooth);
+      border: 1px solid rgba(150, 255, 180, 0.1);
+    }
+    
+    .expandable-concept:hover {
+      background: rgba(150, 255, 180, 0.08);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2),
+                 0 0 10px var(--glow-mint);
+      transform: translateY(-2px);
+    }
+    
+    .expandable-concept.expanded {
+      background: rgba(150, 255, 180, 0.08);
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2),
+                 0 0 15px var(--glow-mint);
     }
     
     .concept-title {
@@ -335,31 +551,48 @@
       align-items: center;
       font-size: 0.95rem;
       margin-bottom: 0.5rem;
+      position: relative;
+      z-index: 2;
+      transition: color 0.3s ease;
+    }
+    
+    .expandable-concept:hover .concept-title {
+      color: var(--text-primary);
     }
     
     .concept-title::before {
       content: "+";
       display: inline-block;
-      margin-right: 0.5rem;
-      transition: transform 0.3s var(--transition-smooth);
+      margin-right: 0.7rem;
+      transition: transform 0.3s var(--transition-bounce);
       width: 16px;
+      height: 16px;
       text-align: center;
+      background: rgba(150, 255, 180, 0.1);
+      border-radius: 50%;
+      line-height: 16px;
+      font-size: 0.9rem;
     }
     
     .expandable-concept.expanded .concept-title::before {
-      content: "-";
+      content: "−";
+      background: rgba(150, 255, 180, 0.2);
+      transform: rotate(180deg);
     }
     
     .concept-content {
       height: 0;
       overflow: hidden;
       padding-left: 1.5rem;
-      transition: height 0.3s var(--transition-smooth);
+      transition: height 0.4s var(--transition-smooth);
       opacity: 0;
       transform: translateY(-5px);
-      transition: opacity 0.3s var(--transition-smooth),
-                  transform 0.3s var(--transition-smooth),
-                  height 0.3s var(--transition-smooth);
+      transition: opacity 0.4s var(--transition-smooth),
+                  transform 0.4s var(--transition-smooth),
+                  height 0.4s var(--transition-smooth);
+      color: var(--text-secondary);
+      position: relative;
+      z-index: 1;
     }
     
     .expandable-concept.expanded .concept-content {
@@ -372,20 +605,24 @@
       position: relative;
       background: rgba(100, 150, 255, 0.05);
       border-radius: 8px;
-      padding: 0.8rem;
-      margin: 1rem 0;
+      padding: 0.8rem 1rem 1rem;
+      margin: 2rem 0 1rem;
       max-height: 0;
       overflow: hidden;
       transition: max-height 0.5s var(--transition-smooth),
                   padding 0.5s var(--transition-smooth),
                   margin 0.5s var(--transition-smooth),
-                  opacity 0.5s var(--transition-smooth);
+                  opacity 0.5s var(--transition-smooth),
+                  box-shadow 0.5s var(--transition-smooth);
       opacity: 0;
+      border: 1px solid rgba(100, 150, 255, 0.1);
     }
     
     .interlinear.visible {
       max-height: 300px;
       opacity: 1;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15),
+                 0 0 10px var(--glow-blue);
     }
     
     .interlinear::before {
@@ -396,9 +633,16 @@
       transform: translateX(-50%);
       font-size: 0.7rem;
       background: var(--bg-tertiary);
-      padding: 0.2rem 0.5rem;
+      padding: 0.3rem 0.7rem;
       border-radius: 4px;
       color: var(--accent-cyan);
+      transition: background 0.3s ease, transform 0.3s ease;
+      border: 1px solid rgba(100, 200, 255, 0.2);
+    }
+    
+    .interlinear.visible:hover::before {
+      background: rgba(100, 150, 255, 0.15);
+      transform: translateX(-50%) translateY(-2px);
     }
     
     /* ===== FOLDED CONTENT ===== */
@@ -410,7 +654,10 @@
       transform: translateY(-10px);
       transition: opacity 0.5s var(--transition-smooth),
                   transform 0.5s var(--transition-smooth),
-                  height 0.5s var(--transition-smooth);
+                  height 0.5s var(--transition-smooth),
+                  box-shadow 0.5s var(--transition-smooth),
+                  margin 0.5s var(--transition-smooth),
+                  padding 0.5s var(--transition-smooth);
       margin: 0;
       padding: 0;
     }
@@ -419,10 +666,13 @@
       height: auto;
       opacity: 1;
       transform: translateY(0);
-      margin: 1rem 0;
-      padding: 1rem;
+      margin: 1.5rem 0;
+      padding: 1.2rem;
       border-left: 3px solid var(--accent-purple);
       background: rgba(180, 120, 255, 0.05);
+      border-radius: 0 8px 8px 0;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15),
+                 0 0 10px var(--glow-purple);
     }
     
     .fold-trigger {
@@ -430,52 +680,129 @@
       color: var(--accent-purple);
       text-decoration: underline dotted;
       display: inline-block;
+      transition: color 0.3s ease, text-shadow 0.3s ease;
+      padding: 0.4rem 0;
+    }
+    
+    .fold-trigger:hover {
+      color: var(--text-primary);
+      text-shadow: 0 0 5px var(--glow-purple);
+    }
+    
+    .fold-trigger::after {
+      content: " >";
+      display: inline-block;
+      transition: transform 0.3s ease;
+    }
+    
+    .fold-trigger:hover::after {
+      transform: translateX(3px);
     }
     
     /* ===== COMMENTARY ===== */
     .commentary {
-      margin: 1.5rem 0;
-      padding-left: 1rem;
+      margin: 1.8rem 0;
+      padding: 1.2rem 1.2rem 1.2rem 1.5rem;
       border-left: 3px solid rgba(200, 200, 220, 0.4);
       color: var(--text-secondary);
       font-style: italic;
       font-size: 0.95rem;
-      line-height: 1.5;
+      line-height: 1.6;
+      position: relative;
+      background: rgba(200, 200, 220, 0.03);
+      border-radius: 0 8px 8px 0;
+      transition: border-left-color 0.3s ease,
+                  background 0.3s ease,
+                  transform 0.3s ease,
+                  box-shadow 0.3s ease;
+    }
+    
+    .commentary:hover {
+      border-left-color: rgba(200, 200, 220, 0.6);
+      background: rgba(200, 200, 220, 0.05);
+      transform: translateX(5px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+    
+    .commentary::before {
+      content: """;
+      position: absolute;
+      top: 0.5rem;
+      left: 0.7rem;
+      font-size: 2rem;
+      color: var(--text-tertiary);
+      opacity: 0.5;
     }
     
     /* ===== SECTION NAVIGATION ===== */
     .nav-buttons {
       display: flex;
       justify-content: space-between;
-      margin-top: 2rem;
+      margin-top: 2.5rem;
+      position: relative;
+      z-index: 10;
     }
     
     .nav-button {
       background: rgba(100, 200, 255, 0.1);
       border: 1px solid rgba(100, 200, 255, 0.2);
       color: var(--text-primary);
-      padding: 0.6rem 1rem;
-      border-radius: 6px;
+      padding: 0.7rem 1.2rem;
+      border-radius: 8px;
       cursor: pointer;
-      transition: all 0.3s ease;
+      transition: all 0.3s var(--transition-smooth),
+                  transform 0.3s var(--transition-bounce);
       font-family: var(--font-mono);
       font-size: 0.9rem;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .nav-button::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to right,
+                  rgba(100, 200, 255, 0),
+                  rgba(100, 200, 255, 0.1));
+      transform: translateX(-100%);
+      transition: transform 0.4s var(--transition-smooth);
     }
     
     .nav-button:hover {
       background: rgba(100, 200, 255, 0.2);
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2),
+                 0 0 10px var(--glow-cyan);
+    }
+    
+    .nav-button:hover::before {
+      transform: translateX(0);
+    }
+    
+    .nav-button:active {
+      transform: translateY(0);
     }
     
     .nav-button:disabled {
       opacity: 0.5;
       cursor: not-allowed;
+      transform: translateY(0);
+      box-shadow: none;
+    }
+    
+    .nav-button:disabled:hover::before {
+      transform: translateX(-100%);
     }
     
     /* ===== WHEEL VISUALIZATION ===== */
     .wheel-container {
-      margin: 2rem 0;
+      margin: 2.5rem 0;
       display: flex;
       justify-content: center;
+      position: relative;
+      perspective: 1000px;
+      z-index: 5;
     }
     
     .wheel {
@@ -484,11 +811,20 @@
       border-radius: 50%;
       border: 2px solid var(--accent-gold);
       position: relative;
-      box-shadow: 0 0 15px var(--glow-gold);
+      box-shadow: 0 0 20px var(--glow-gold);
       display: flex;
       align-items: center;
       justify-content: center;
       background: rgba(30, 40, 60, 0.4);
+      transform-style: preserve-3d;
+      transition: transform 0.5s var(--transition-smooth),
+                  box-shadow 0.5s var(--transition-smooth);
+      will-change: transform, box-shadow;
+    }
+    
+    .wheel:hover {
+      box-shadow: 0 0 30px var(--glow-gold);
+      transform: rotateX(10deg);
     }
     
     .wheel-segment {
@@ -499,21 +835,34 @@
       left: 0;
       transform-origin: center;
       cursor: pointer;
+      transition: transform 0.3s var(--transition-smooth);
     }
     
     .wheel-segment path {
       fill: rgba(30, 40, 60, 0.7);
       stroke: var(--accent-gold);
       stroke-width: 1;
-      transition: fill 0.3s ease;
+      transition: fill 0.3s ease, 
+                  stroke-width 0.3s ease,
+                  stroke 0.3s ease;
+      filter: drop-shadow(0 0 2px var(--glow-gold));
+    }
+    
+    .wheel-segment:hover {
+      transform: scale(1.03);
     }
     
     .wheel-segment:hover path {
       fill: rgba(255, 200, 100, 0.2);
+      stroke-width: 1.5;
+      filter: drop-shadow(0 0 5px var(--glow-gold));
     }
     
     .wheel-segment.active path {
       fill: rgba(255, 200, 100, 0.3);
+      stroke-width: 2;
+      stroke: var(--accent-gold);
+      filter: drop-shadow(0 0 8px var(--glow-gold));
     }
     
     .wheel-text {
@@ -524,11 +873,19 @@
       width: 60px;
       color: var(--text-secondary);
       pointer-events: none;
+      transition: color 0.3s ease, text-shadow 0.3s ease;
+      text-shadow: 0 0 1px rgba(0, 0, 0, 0.5);
+    }
+    
+    .wheel-segment:hover + .wheel-text,
+    .wheel-segment.active + .wheel-text {
+      color: var(--accent-gold);
+      text-shadow: 0 0 5px var(--glow-gold);
     }
     
     .wheel-center {
-      width: 60px;
-      height: 60px;
+      width: 70px;
+      height: 70px;
       border-radius: 50%;
       background: rgba(180, 120, 255, 0.2);
       border: 1px solid var(--accent-purple);
@@ -538,7 +895,19 @@
       font-size: 0.8rem;
       color: var(--accent-purple);
       text-align: center;
-      box-shadow: 0 0 10px var(--glow-purple);
+      box-shadow: 0 0 15px var(--glow-purple);
+      z-index: 10;
+      transform-style: preserve-3d;
+      transition: transform 0.4s var(--transition-bounce),
+                  box-shadow 0.4s var(--transition-smooth),
+                  background 0.4s var(--transition-smooth);
+    }
+    
+    .wheel-center:hover {
+      transform: translateZ(10px) scale(1.1);
+      background: rgba(180, 120, 255, 0.3);
+      box-shadow: 0 0 25px var(--glow-purple);
+      cursor: pointer;
     }
     
     /* ===== PINNABLE TOOLTIPS ===== */
@@ -548,15 +917,18 @@
       border: 1px solid rgba(180, 120, 255, 0.3);
       border-radius: 8px;
       padding: 0.75rem;
-      width: 200px;
+      width: 220px;
       z-index: 10;
       opacity: 0;
       box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3),
                  0 0 10px var(--glow-purple);
       pointer-events: none;
-      transition: opacity 0.3s ease;
+      transition: opacity 0.3s var(--transition-smooth),
+                  transform 0.3s var(--transition-bounce),
+                  box-shadow 0.3s var(--transition-smooth);
       font-size: 0.8rem;
-      transform: translate(-50%, -100%);
+      transform: translate(-50%, -120%) scale(0.95);
+      backdrop-filter: blur(5px);
     }
     
     .pin-tooltip::after {
@@ -568,17 +940,23 @@
       border-width: 8px 8px 0;
       border-style: solid;
       border-color: rgba(15, 20, 35, 0.95) transparent transparent transparent;
+      transition: border-color 0.3s ease;
     }
     
     .pin-tooltip.visible {
       opacity: 1;
       pointer-events: auto;
+      transform: translate(-50%, -120%) scale(1);
     }
     
     .pin-tooltip.pinned {
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4),
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.4),
                  0 0 15px var(--glow-purple);
       border-color: var(--accent-purple);
+    }
+    
+    .pin-tooltip.pinned::after {
+      border-color: var(--accent-purple) transparent transparent transparent;
     }
     
     .pin-button {
@@ -590,10 +968,31 @@
       color: var(--text-secondary);
       cursor: pointer;
       font-size: 0.8rem;
+      transition: color 0.3s ease, transform 0.3s ease;
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
     }
     
     .pin-button:hover {
       color: var(--accent-purple);
+      transform: scale(1.2);
+    }
+    
+    .pin-tooltip-title {
+      color: var(--accent-purple);
+      margin-bottom: 0.4rem;
+      padding-bottom: 0.3rem;
+      border-bottom: 1px solid rgba(180, 120, 255, 0.2);
+      padding-right: 20px;
+    }
+    
+    .pin-tooltip-content {
+      color: var(--text-secondary);
+      line-height: 1.4;
     }
     
     /* ===== ANIMATIONS ===== */
@@ -604,14 +1003,19 @@
     }
     
     @keyframes pulse-gold {
-      0% { text-shadow: 0 0 8px var(--glow-gold); }
-      50% { text-shadow: 0 0 15px var(--glow-gold); }
-      100% { text-shadow: 0 0 8px var(--glow-gold); }
+      0% { text-shadow: 0 0 8px var(--glow-gold); box-shadow: 0 0 15px var(--glow-gold); }
+      50% { text-shadow: 0 0 15px var(--glow-gold); box-shadow: 0 0 25px var(--glow-gold); }
+      100% { text-shadow: 0 0 8px var(--glow-gold); box-shadow: 0 0 15px var(--glow-gold); }
     }
     
     @keyframes float {
       0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-3px); }
+      50% { transform: translateY(-5px); }
+    }
+    
+    @keyframes rotate {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
     }
     
     .pulse {
@@ -626,6 +1030,57 @@
       animation: float 6s infinite ease-in-out;
     }
     
+    .rotate-slow {
+      animation: rotate 60s infinite linear;
+    }
+    
+    /* ===== Scroll Indicator ===== */
+    .scroll-indicator {
+      position: absolute;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 40px;
+      height: 60px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      opacity: 0.7;
+      transition: opacity 0.3s ease, transform 0.3s ease;
+      z-index: 10;
+      pointer-events: none;
+    }
+    
+    .scroll-indicator:hover {
+      opacity: 1;
+    }
+    
+    .scroll-arrow {
+      width: 20px;
+      height: 20px;
+      border-right: 2px solid var(--accent-cyan);
+      border-bottom: 2px solid var(--accent-cyan);
+      transform: rotate(45deg);
+      margin-bottom: -10px;
+      opacity: 0;
+      animation: scroll-arrow-appear 2s infinite;
+      box-shadow: 2px 2px 5px var(--glow-cyan);
+    }
+    
+    .scroll-arrow:nth-child(2) {
+      animation-delay: 0.5s;
+    }
+    
+    .scroll-arrow:nth-child(3) {
+      animation-delay: 1s;
+    }
+    
+    @keyframes scroll-arrow-appear {
+      0% { opacity: 0; transform: rotate(45deg) translateY(-10px); }
+      50% { opacity: 1; transform: rotate(45deg) translateY(0); }
+      100% { opacity: 0; transform: rotate(45deg) translateY(10px); }
+    }
+    
     /* ===== RESPONSIVE ADJUSTMENTS ===== */
     @media (max-width: 400px) {
       .mobile-container {
@@ -633,20 +1088,89 @@
         height: 100vh;
         border-radius: 0;
       }
+      
+      .wheel {
+        width: 280px;
+        height: 280px;
+      }
+      
+      .section {
+        padding: 1.5rem 1rem;
+      }
+    }
+    
+    /* ===== Parallax Background ===== */
+    .parallax-stars {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 200%;
+      pointer-events: none;
+      z-index: 0;
+    }
+    
+    .star {
+      position: absolute;
+      width: 2px;
+      height: 2px;
+      background-color: rgba(255, 255, 255, 0.5);
+      border-radius: 50%;
+    }
+    
+    .star.medium {
+      width: 3px;
+      height: 3px;
+      background-color: rgba(255, 255, 255, 0.7);
+    }
+    
+    .star.large {
+      width: 4px;
+      height: 4px;
+      background-color: rgba(255, 255, 255, 0.9);
+      box-shadow: 0 0 4px rgba(255, 255, 255, 0.5);
+    }
+    
+    /* ===== Highlight effect ===== */
+    .highlight-effect {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      opacity: 0;
+      z-index: 2;
+      background: radial-gradient(
+        circle at var(--x, 50%) var(--y, 50%),
+        rgba(100, 200, 255, 0.2) 0%,
+        rgba(100, 200, 255, 0) 50%
+      );
+      transition: opacity 1s ease;
     }
   </style>
 </head>
 <body>
   <div class="mobile-container">
     <div class="content-area" id="contentArea">
+      <!-- Parallax Background -->
+      <div class="parallax-stars" id="parallaxStars"></div>
+      
+      <!-- Mouse highlight effect -->
+      <div class="highlight-effect" id="highlightEffect"></div>
+
       <!-- Splash Screen -->
       <div class="splash-screen" id="splashScreen">
-        <h1 class="splash-title">Paṭicca-samuppāda</h1>
+        <h1 class="splash-title pulse">Paṭicca-samuppāda</h1>
         <p class="splash-subtitle">Scroll to explore the chain of dependent origination</p>
+        <div class="scroll-indicator">
+          <div class="scroll-arrow"></div>
+          <div class="scroll-arrow"></div>
+          <div class="scroll-arrow"></div>
+        </div>
       </div>
 
       <!-- Introduction Section -->
       <section class="section" id="introduction">
+        <div class="section-background"></div>
         <h2 class="section-title">The Twelve Nidānas</h2>
         <p class="section-subtitle">Exploring the links of dependent origination</p>
         
@@ -670,10 +1194,15 @@
         <div class="commentary">
           Click each segment on the wheel to explore its meaning, or scroll down to explore each nidāna in sequence. The foldouts, tooltips, and expandable sections provide deeper insights into the Buddha's teaching.
         </div>
+        
+        <a href="https://www.accesstoinsight.org/tipitaka/sn/sn12/sn12.002.than.html" target="_blank" class="access-link">
+          Read the Analysis of Dependent Co-arising at Access to Insight
+        </a>
       </section>
       
       <!-- Nidanas Section -->
       <section class="section" id="nidanas">
+        <div class="section-background"></div>
         <ul class="nidana-list" id="nidanaList">
           <!-- Nidana items will be created by JavaScript -->
         </ul>
@@ -681,6 +1210,10 @@
         <div class="commentary">
           "When this exists, that exists; when this ceases to exist, that also ceases to exist." This is the essential principle of dependent origination, showing how all phenomena are interconnected.
         </div>
+        
+        <a href="https://www.accesstoinsight.org/lib/study/dependent.html" target="_blank" class="access-link">
+          Explore a study guide on Dependent Co-arising at Access to Insight
+        </a>
         
         <div class="nav-buttons">
           <button class="nav-button" id="prevButton" disabled>Previous</button>
@@ -707,6 +1240,7 @@
         description: "Ignorance of the Four Noble Truths and the true nature of reality. In the Buddhist sense, it refers to not understanding how things truly are.",
         quote: "And what is ignorance? Not knowing suffering, not knowing the origin of suffering, not knowing the cessation of suffering, not knowing the way leading to the cessation of suffering: this is called ignorance.",
         source: "Sammādiṭṭhi Sutta (MN 9)",
+        accessUrl: "https://www.accesstoinsight.org/tipitaka/mn/mn.009.ntbb.html",
         concepts: [
           {
             title: "Forms of Ignorance",
@@ -726,6 +1260,7 @@
         description: "Mental formations and volitions that arise from ignorance. These are the intentional activities that create karma and condition consciousness.",
         quote: "And what are fabrications? These three are fabrications: bodily fabrications, verbal fabrications, mental fabrications.",
         source: "Paticca-samuppada-vibhanga Sutta (SN 12.2)",
+        accessUrl: "https://www.accesstoinsight.org/tipitaka/sn/sn12/sn12.002.than.html",
         concepts: [
           {
             title: "Types of Saṅkhāra",
@@ -745,6 +1280,7 @@
         description: "The awareness that arises dependent on sense organs and their objects. In the context of dependent origination, it's also the consciousness that links one life to the next.",
         quote: "And what is consciousness? These six are classes of consciousness: eye-consciousness, ear-consciousness, nose-consciousness, tongue-consciousness, body-consciousness, intellect-consciousness. This is called consciousness.",
         source: "Paticca-samuppada-vibhanga Sutta (SN 12.2)",
+        accessUrl: "https://www.accesstoinsight.org/tipitaka/sn/sn12/sn12.002.than.html",
         concepts: [
           {
             title: "Six Types of Consciousness",
@@ -764,6 +1300,7 @@
         description: "The psycho-physical complex comprising mental factors (nāma) and physical form (rūpa). This is the mind-body organism that serves as the basis for experience.",
         quote: "And what is name-and-form? Feeling, perception, intention, contact, and attention: This is called name. The four great elements, and the form dependent on the four great elements: This is called form.",
         source: "Paticca-samuppada-vibhanga Sutta (SN 12.2)",
+        accessUrl: "https://www.accesstoinsight.org/tipitaka/sn/sn12/sn12.002.than.html",
         concepts: [
           {
             title: "Name (Nāma)",
@@ -783,6 +1320,7 @@
         description: "The six internal sense bases (eye, ear, nose, tongue, body, and mind) and their corresponding external objects. These are the gateways through which experience occurs.",
         quote: "And what are the six sense media? These six are sense media: the eye-medium, the ear-medium, the nose-medium, the tongue-medium, the body-medium, the intellect-medium.",
         source: "Paticca-samuppada-vibhanga Sutta (SN 12.2)",
+        accessUrl: "https://www.accesstoinsight.org/tipitaka/sn/sn12/sn12.002.than.html",
         concepts: [
           {
             title: "Internal and External Bases",
@@ -802,6 +1340,7 @@
         description: "The coming together of sense organ, sense object, and the corresponding consciousness. This tripartite meeting is the basis for all experience.",
         quote: "And what is contact? These six are classes of contact: eye-contact, ear-contact, nose-contact, tongue-contact, body-contact, intellect-contact. This is called contact.",
         source: "Paticca-samuppada-vibhanga Sutta (SN 12.2)",
+        accessUrl: "https://www.accesstoinsight.org/tipitaka/sn/sn12/sn12.002.than.html",
         concepts: [
           {
             title: "Tripartite Meeting",
@@ -821,6 +1360,7 @@
         description: "The affective tone that arises from contact with sense objects. Feelings are categorized as pleasant, unpleasant, or neutral.",
         quote: "And what is feeling? These six are classes of feeling: feeling born from eye-contact, feeling born from ear-contact, feeling born from nose-contact, feeling born from tongue-contact, feeling born from body-contact, feeling born from intellect-contact.",
         source: "Paticca-samuppada-vibhanga Sutta (SN 12.2)",
+        accessUrl: "https://www.accesstoinsight.org/tipitaka/sn/sn12/sn12.002.than.html",
         concepts: [
           {
             title: "Three Types of Feeling",
@@ -840,6 +1380,7 @@
         description: "The thirst or desire that arises based on feeling. It manifests as craving for sensual pleasures, craving for existence, and craving for non-existence.",
         quote: "And what is craving? These six are classes of craving: craving for forms, craving for sounds, craving for smells, craving for tastes, craving for tactile sensations, craving for ideas.",
         source: "Paticca-samuppada-vibhanga Sutta (SN 12.2)",
+        accessUrl: "https://www.accesstoinsight.org/tipitaka/sn/sn12/sn12.002.than.html",
         concepts: [
           {
             title: "Three Types of Craving",
@@ -859,6 +1400,7 @@
         description: "The intensified form of craving that leads to attachment and appropriation. It manifests as clinging to sensual pleasures, views, rules and observances, and theories of self.",
         quote: "And what is clinging/sustenance? These four are clingings: clinging to sensuality, clinging to views, clinging to precepts and practices, clinging to doctrines of self.",
         source: "Paticca-samuppada-vibhanga Sutta (SN 12.2)",
+        accessUrl: "https://www.accesstoinsight.org/tipitaka/sn/sn12/sn12.002.than.html",
         concepts: [
           {
             title: "Four Types of Clinging",
@@ -878,6 +1420,7 @@
         description: "The process of coming into existence in a particular realm. It represents both the active process of producing a new existence and the state of existence itself.",
         quote: "And what is becoming? These three are becomings: sensual becoming, form becoming, formless becoming. This is called becoming.",
         source: "Paticca-samuppada-vibhanga Sutta (SN 12.2)",
+        accessUrl: "https://www.accesstoinsight.org/tipitaka/sn/sn12/sn12.002.than.html",
         concepts: [
           {
             title: "Three Realms of Becoming",
@@ -897,6 +1440,7 @@
         description: "The manifestation of the five aggregates in a new existence. In the context of dependent origination, it refers to the beginning of a new life conditioned by previous becoming.",
         quote: "And what is birth? Whatever birth, taking birth, descent, coming-to-be, coming-forth, appearance of aggregates, and acquisition of sense media of the various beings in this or that group of beings, that is called birth.",
         source: "Paticca-samuppada-vibhanga Sutta (SN 12.2)",
+        accessUrl: "https://www.accesstoinsight.org/tipitaka/sn/sn12/sn12.002.than.html",
         concepts: [
           {
             title: "Manifestation of Aggregates",
@@ -916,6 +1460,7 @@
         description: "The inevitable processes of decay and dissolution that follow birth. This final link completes the cycle, as the suffering associated with aging and death conditions ignorance, starting the cycle again.",
         quote: "And what is aging and death? Whatever aging, decrepitude, brokenness, graying, wrinkling, decline of life-force, weakening of the faculties... Whatever falling away, perishing, breaking up, disappearance, dying, death...",
         source: "Paticca-samuppada-vibhanga Sutta (SN 12.2)",
+        accessUrl: "https://www.accesstoinsight.org/tipitaka/sn/sn12/sn12.002.than.html",
         concepts: [
           {
             title: "Universal Characteristic",
@@ -932,14 +1477,29 @@
 
     // ===== INITIALIZATION =====
     document.addEventListener("DOMContentLoaded", function() {
+      // Create parallax stars
+      createParallaxStars();
+      
+      // Set up highlight effect
+      setupHighlightEffect();
+      
       // Hide splash screen on scroll
       const splashScreen = document.getElementById("splashScreen");
       const contentArea = document.getElementById("contentArea");
       
       contentArea.addEventListener("scroll", function() {
-        if (contentArea.scrollTop > 10) {
+        if (contentArea.scrollTop > 20) {
           splashScreen.classList.add("hide");
         }
+        
+        // Update parallax effect
+        updateParallax();
+        
+        // Check for sections in view
+        checkSectionsInView();
+        
+        // Check for nidana items in view
+        checkNidanaItemsInView();
       });
       
       // Create the wheel visualization
@@ -954,13 +1514,128 @@
       // Set up navigation buttons
       setupNavigation();
       
+      // Set the wheel to slowly rotate
+      document.querySelector("#wheel svg").classList.add("rotate-slow");
+      
       // After a delay, add a hint to scroll
       setTimeout(() => {
         if (!splashScreen.classList.contains("hide")) {
           splashScreen.classList.add("pulse");
         }
       }, 3000);
+      
+      // Initial check for elements in view
+      setTimeout(() => {
+        checkSectionsInView();
+        checkNidanaItemsInView();
+      }, 500);
     });
+    
+    // ===== PARALLAX STARS =====
+    function createParallaxStars() {
+      const starsContainer = document.getElementById("parallaxStars");
+      const numStars = 100;
+      
+      for (let i = 0; i < numStars; i++) {
+        const star = document.createElement("div");
+        star.classList.add("star");
+        
+        // Randomly position stars
+        const x = Math.random() * 100;
+        const y = Math.random() * 100;
+        star.style.left = `${x}%`;
+        star.style.top = `${y}%`;
+        
+        // Randomly assign star sizes
+        const size = Math.random();
+        if (size > 0.9) {
+          star.classList.add("large");
+        } else if (size > 0.7) {
+          star.classList.add("medium");
+        }
+        
+        starsContainer.appendChild(star);
+      }
+    }
+    
+    function updateParallax() {
+      const scrollY = document.getElementById("contentArea").scrollTop;
+      const stars = document.querySelectorAll(".star");
+      
+      stars.forEach((star, index) => {
+        // Different parallax speeds based on star size
+        let speed = 0.2;
+        if (star.classList.contains("medium")) {
+          speed = 0.3;
+        } else if (star.classList.contains("large")) {
+          speed = 0.4;
+        }
+        
+        // Apply parallax transform
+        const yPos = -scrollY * speed;
+        star.style.transform = `translateY(${yPos}px)`;
+      });
+    }
+    
+    // ===== HIGHLIGHT EFFECT =====
+    function setupHighlightEffect() {
+      const highlightEffect = document.getElementById("highlightEffect");
+      const contentArea = document.getElementById("contentArea");
+      
+      contentArea.addEventListener("mousemove", (e) => {
+        // Get mouse position relative to content area
+        const rect = contentArea.getBoundingClientRect();
+        const x = ((e.clientX - rect.left) / rect.width) * 100;
+        const y = ((e.clientY - rect.top) / rect.height) * 100;
+        
+        // Update CSS custom properties
+        highlightEffect.style.setProperty("--x", `${x}%`);
+        highlightEffect.style.setProperty("--y", `${y}%`);
+        
+        // Show highlight effect
+        highlightEffect.style.opacity = 0.3;
+      });
+      
+      contentArea.addEventListener("mouseleave", () => {
+        highlightEffect.style.opacity = 0;
+      });
+    }
+    
+    // ===== CHECK ELEMENTS IN VIEW =====
+    function checkSectionsInView() {
+      const sections = document.querySelectorAll(".section");
+      
+      sections.forEach(section => {
+        if (isElementInView(section)) {
+          section.classList.add("visible");
+        }
+      });
+    }
+    
+    function checkNidanaItemsInView() {
+      const nidanaItems = document.querySelectorAll(".nidana-item");
+      
+      nidanaItems.forEach((item, index) => {
+        // Add staggered delay to create cascade effect
+        setTimeout(() => {
+          if (isElementInView(item)) {
+            item.classList.add("visible");
+          }
+        }, index * 100);
+      });
+    }
+    
+    function isElementInView(element) {
+      const contentArea = document.getElementById("contentArea");
+      const contentRect = contentArea.getBoundingClientRect();
+      const elementRect = element.getBoundingClientRect();
+      
+      // Check if element is in viewport or slightly above
+      return (
+        elementRect.top < contentRect.bottom - 100 &&
+        elementRect.bottom > contentRect.top + 100
+      );
+    }
     
     // ===== WHEEL VISUALIZATION =====
     function createWheel() {
@@ -1024,6 +1699,16 @@
         
         document.querySelector("#wheel").appendChild(text);
       });
+      
+      // Add wheel center click event
+      document.querySelector(".wheel-center").addEventListener("click", function() {
+        // Create a pinnable tooltip about dependent origination
+        createPinnableTooltip(
+          this,
+          "Paṭicca-samuppāda",
+          "The central teaching on dependent origination shows how suffering arises through a chain of conditions and how it can be ended. Understanding this process is key to liberation from the cycle of birth and death."
+        );
+      });
     }
     
     function highlightNidana(index) {
@@ -1034,6 +1719,15 @@
       
       // Add active class to selected segment
       document.querySelector(`.wheel-segment[data-index="${index}"]`).classList.add("active");
+      
+      // Apply pulse effect to the wheel
+      const wheel = document.querySelector(".wheel");
+      wheel.classList.add("pulse-gold");
+      
+      // Remove pulse effect after animation
+      setTimeout(() => {
+        wheel.classList.remove("pulse-gold");
+      }, 1500);
     }
     
     // ===== NIDANA LIST =====
@@ -1058,6 +1752,28 @@
           <span class="nidana-meaning">${nidana.meaning}</span>
           <span class="expand-icon">↓</span>
         `;
+        
+        // Add 3D tilt effect on mouse move
+        nidanaHeader.addEventListener("mousemove", function(e) {
+          const card = this.parentElement;
+          const rect = card.getBoundingClientRect();
+          const x = e.clientX - rect.left;
+          const y = e.clientY - rect.top;
+          
+          // Calculate tilt values
+          const tiltX = (y / rect.height - 0.5) * 10;
+          const tiltY = (x / rect.width - 0.5) * -10;
+          
+          // Apply tilt and add subtle movement
+          card.style.transform = `perspective(1000px) rotateX(${tiltX}deg) rotateY(${tiltY}deg) translateZ(10px)`;
+        });
+        
+        // Reset card position on mouse leave
+        nidanaHeader.addEventListener("mouseleave", function() {
+          const card = this.parentElement;
+          card.style.transform = "";
+        });
+        
         nidanaHeader.addEventListener("click", function() {
           toggleNidanaContent(nidanaCard, nidana);
         });
@@ -1097,6 +1813,9 @@
         
         // Set height for animation
         content.style.height = content.scrollHeight + "px";
+        
+        // Highlight on wheel
+        highlightNidana(nidana.number - 1);
       }
     }
     
@@ -1115,6 +1834,17 @@
           "${nidana.quote}"
           <span class="quote-source">${nidana.source}</span>
         `;
+        
+        // Add Access to Insight link
+        if (nidana.accessUrl) {
+          const accessLink = document.createElement("a");
+          accessLink.classList.add("access-link");
+          accessLink.href = nidana.accessUrl;
+          accessLink.target = "_blank";
+          accessLink.textContent = "Read in context at Access to Insight";
+          quoteContainer.appendChild(accessLink);
+        }
+        
         contentElement.appendChild(quoteContainer);
       }
       
@@ -1210,7 +1940,7 @@
           // Position the tooltip
           const rect = term.getBoundingClientRect();
           tooltip.style.left = (rect.left + rect.width / 2) + "px";
-          tooltip.style.top = (rect.top - 10) + "px";
+          tooltip.style.top = (rect.top - 15) + "px";
           
           // Set tooltip content
           tooltipTitle.textContent = term.getAttribute("data-title");
@@ -1223,6 +1953,28 @@
         term.addEventListener("mouseleave", function() {
           // Hide the tooltip
           tooltip.classList.remove("visible");
+        });
+        
+        // Add click behavior for mobile
+        term.addEventListener("click", function(event) {
+          event.stopPropagation();
+          
+          // Toggle tooltip visibility
+          if (tooltip.classList.contains("visible")) {
+            tooltip.classList.remove("visible");
+          } else {
+            // Position the tooltip
+            const rect = term.getBoundingClientRect();
+            tooltip.style.left = (rect.left + rect.width / 2) + "px";
+            tooltip.style.top = (rect.top - 15) + "px";
+            
+            // Set tooltip content
+            tooltipTitle.textContent = term.getAttribute("data-title");
+            tooltipContent.textContent = term.getAttribute("data-content");
+            
+            // Show the tooltip
+            tooltip.classList.add("visible");
+          }
         });
       });
       
@@ -1292,15 +2044,26 @@
         }
         
         // Add highlight effect
-        nidanaElement.classList.add("highlight");
+        nidanaElement.style.transform = "scale(1.03)";
+        nidanaElement.style.transition = "transform 0.5s var(--transition-bounce)";
+        
         setTimeout(() => {
-          nidanaElement.classList.remove("highlight");
-        }, 1000);
+          nidanaElement.style.transform = "";
+        }, 800);
       }
     }
     
     // ===== PINNABLE TOOLTIPS =====
     function createPinnableTooltip(element, title, content) {
+      // Check if there's already a pinned tooltip
+      if (document.querySelector(".pin-tooltip.pinned")) {
+        return;
+      }
+      
+      // Remove any existing tooltips
+      const existingTooltips = document.querySelectorAll(".pin-tooltip:not(.pinned)");
+      existingTooltips.forEach(tooltip => tooltip.remove());
+      
       // Create tooltip
       const tooltip = document.createElement("div");
       tooltip.classList.add("pin-tooltip");
@@ -1312,11 +2075,17 @@
       pinButton.title = "Pin this tooltip";
       
       // Add content
-      tooltip.innerHTML = `
-        <h4>${title}</h4>
-        <p>${content}</p>
-      `;
+      const tooltipTitle = document.createElement("h4");
+      tooltipTitle.classList.add("pin-tooltip-title");
+      tooltipTitle.textContent = title;
+      
+      const tooltipContent = document.createElement("div");
+      tooltipContent.classList.add("pin-tooltip-content");
+      tooltipContent.textContent = content;
+      
       tooltip.appendChild(pinButton);
+      tooltip.appendChild(tooltipTitle);
+      tooltip.appendChild(tooltipContent);
       
       // Position the tooltip
       const rect = element.getBoundingClientRect();
@@ -1332,7 +2101,8 @@
       }, 10);
       
       // Pin/unpin functionality
-      pinButton.addEventListener("click", function() {
+      pinButton.addEventListener("click", function(event) {
+        event.stopPropagation();
         tooltip.classList.toggle("pinned");
         pinButton.innerHTML = tooltip.classList.contains("pinned") ? "❌" : "📌";
         pinButton.title = tooltip.classList.contains("pinned") ? "Unpin" : "Pin this tooltip";
