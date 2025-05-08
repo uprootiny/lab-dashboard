@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport"
+        content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+  <title>Interactive Nidānas: Dependent Origination</title>
+  <style>
+  /* ===== RESET & BASE ===== */
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html, body { height:100%; }
+  body {
+    background: #0a0a12;
+    color: rgba(230,230,240,0.96);
+    font-family: Menlo, monospace;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+  :root {
+    /* colors */
+    --accent-cyan: rgba(120,210,255,0.9);
+    --accent-blue: rgba(100,150,255,0.9);
+    --accent-gold: rgba(255,200,120,0.9);
+    --accent-mint: rgba(150,255,180,0.9);
+    --accent-purple: rgba(180,120,255,0.9);
+    --text-sec: rgba(200,200,220,0.85);
+    --text-ter: rgba(170,170,190,0.75);
+    --glow-cyan: rgba(100,200,255,0.4);
+    --glow-blue: rgba(80,120,255,0.4);
+    --glow-gold: rgba(255,200,100,0.4);
+    --bg-pri: #0a0a12;
+    --bg-ter: #1a1a2e;
+    --transition: cubic-bezier(0.22,1,0.36,1);
+  }
+
+  /* ===== MOBILE CONTAINER ===== */
+  .mobile-container {
+    width: 390px; height: 844px;
+    background: linear-gradient(135deg,var(--bg-pri),var(--bg-ter));
+    border-radius: 40px;
+    box-shadow:
+      0 25px 50px -12px rgba(0,0,0,0.5),
+      inset 0 0 2px rgba(255,255,255,0.05);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  }
+
+  /* ===== SCROLL SCENE ===== */
+  .content-area {
+    flex:1;
+    overflow-y:auto;
+    overflow-x:hidden;
+    scroll-behavior:smooth;
+    perspective:1200px;
+    padding:2rem 1.5rem;
+    position: relative;
+  }
+  .content-area::-webkit-scrollbar {
+    width:6px;
+  }
+  .content-area::-webkit-scrollbar-thumb {
+    background: var(--accent-cyan);
+    border-radius:3px;
+  }
+
+  /* ===== SPLASH ===== */
+  .splash {
+    position:absolute; inset:0;
+    background: rgba(10,10,18,0.95);
+    display:flex; flex-direction:column;
+    align-items:center; justify-content:center;
+    z-index:50; pointer-events:none;
+    opacity:1; transition:opacity 0.8s var(--transition);
+  }
+  .splash.hide { opacity:0; }
+  .splash h1 {
+    color: var(--accent-cyan);
+    text-shadow: 0 0 12px var(--glow-cyan);
+    font-size:2rem; margin-bottom:0.5rem;
+  }
+  .splash small {
+    color: var(--text-sec);
+    font-size:0.9rem;
+  }
+
+  /* ===== SECTION HEADINGS ===== */
+  .section-title {
+    text-align:center;
+    color: var(--accent-cyan);
+    text-shadow:0 0 8px var(--glow-cyan);
+    font-size:1.5rem; margin-bottom:0.5rem;
+  }
+  .section-sub {
+    text-align:center;
+    color: var(--text-sec);
+    font-style:italic;
+    font-size:0.9rem; margin-bottom:1.2rem;
+  }
+
+  /* ===== WHEEL ===== */
+  .wheel-container { display:flex; justify-content:center; }
+  .wheel {
+    width:300px; height:300px; position:relative;
+    border-radius:50%;
+    background: rgba(30,40,60,0.4);
+    border:2px solid var(--accent-gold);
+    box-shadow: 0 0 15px var(--glow-gold);
+  }
+  .wheel-center {
+    position:absolute; top:50%; left:50%;
+    transform:translate(-50%,-50%);
+    width:60px; height:60px; border-radius:50%;
+    background: rgba(180,120,255,0.2);
+    border:1px solid var(--accent-purple);
+    display:flex; align-items:center; justify-content:center;
+    color: var(--accent-purple);
+    font-size:0.8rem;
+    box-shadow:0 0 10px var(--glow-purple);
+  }
+
+  /* ===== TOOLTIP ===== */
+  .tooltip {
+    position:fixed; top:0; left:0;
+    transform:translate(-50%,-100%);
+    background: rgba(15,20,35,0.98);
+    border-radius:8px;
+    padding:0.8rem;
+    max-width:240px;
+    color: var(--text-sec);
+    font-size:0.85rem;
+    box-shadow:
+      0 5px 15px rgba(0,0,0,0.3),
+      0 0 10px var(--glow-cyan);
+    opacity:0; pointer-events:none;
+    transition:opacity 0.3s,transform 0.3s;
+    z-index:60;
+  }
+  .tooltip.visible {
+    opacity:1; transform:translate(-50%,-110%);
+  }
+  .tooltip h3 {
+    color: var(--accent-cyan);
+    margin-bottom:0.4rem;
+    font-size:1rem;
+  }
+
+  /* ===== NIDĀNA LIST ===== */
+  .nidana-list { list-style:none; padding:0; }
+  .nidana-item { margin-bottom:1rem; }
+
+  /* ===== CARD ===== */
+  .nidana-card {
+    background: rgba(20,30,50,0.4);
+    border:1px solid rgba(100,200,255,0.15);
+    border-radius:12px;
+    overflow:hidden;
+    transition:all 0.3s var(--transition);
+    transform-style:preserve-3d;
+  }
+  .nidana-card:hover {
+    background: rgba(20,30,50,0.6);
+  }
+  .nidana-header {
+    display:flex; align-items:center;
+    padding:0.8rem 1rem; cursor:pointer;
+  }
+  .nidana-number {
+    color: var(--accent-blue);
+    font-weight:700;
+    width:1.6rem; text-align:center;
+    text-shadow:0 0 6px var(--glow-blue);
+  }
+  .nidana-term {
+    flex:1;
+    font-style:italic;
+    font-size:1.05rem;
+    color: var(--accent-gold);
+    text-shadow:0 0 6px var(--glow-gold);
+    margin-left:0.6rem;
+  }
+  .nidana-meaning {
+    color: var(--text-sec);
+    font-size:0.9rem;
+    text-align:right;
+  }
+  .expand-icon {
+    margin-left:0.5rem;
+    transition:transform 0.3s var(--transition);
+  }
+  .nidana-card.expanded .expand-icon {
+    transform:rotate(180deg);
+  }
+
+  .nidana-content {
+    height:0; overflow:hidden;
+    opacity:0; transform: translateY(-10px);
+    transition: height 0.3s var(--transition),
+                opacity 0.3s var(--transition),
+                transform 0.3s var(--transition),
+                padding 0.3s var(--transition);
+    padding: 0 1rem;
+  }
+  .nidana-card.expanded .nidana-content {
+    opacity:1; transform:translateY(0);
+    padding-bottom:1rem;
+  }
+  .nidana-desc { margin:0.8rem 0; line-height:1.5; }
+
+  /* concepts */
+  .expandable-concept {
+    margin:0.6rem 0;
+    cursor:pointer;
+    font-size:0.9rem;
+    color: var(--accent-mint);
+  }
+  .expandable-concept::before {
+    content:"+";
+    display:inline-block; width:1em;
+  }
+  .expandable-concept.expanded::before { content:"–"; }
+  .concept-content {
+    max-height:0; overflow:hidden;
+    opacity:0; transform:translateY(-5px);
+    transition: all 0.3s var(--transition);
+    margin:0; padding-left:1.2em;
+  }
+  .expandable-concept.expanded .concept-content {
+    max-height:300px;
+    opacity:1; transform:translateY(0);
+  }
+
+  /* interlinear */
+  .interlinear {
+    background: rgba(100,150,255,0.05);
+    border-radius:6px;
+    padding:0.6rem;
+    margin:0.8rem 0;
+    max-height:0; overflow:hidden;
+    opacity:0; transform:translateY(-5px);
+    transition:all 0.4s var(--transition);
+  }
+  .interlinear.visible {
+    max-height:500px; opacity:1; transform:translateY(0);
+  }
+
+  /* glossable */
+  .glossable {
+    text-decoration:underline dotted var(--accent-cyan);
+    cursor:pointer;
+    position:relative;
+  }
+
+  /* nav */
+  .nav-buttons { display:flex; justify-content:space-between; }
+  .nav-button {
+    background: rgba(100,200,255,0.1);
+    border:1px solid rgba(100,200,255,0.2);
+    color:inherit; padding:0.6rem 1rem;
+    border-radius:6px; cursor:pointer;
+    transition:all 0.3s var(--transition);
+  }
+  .nav-button:disabled { opacity:0.5; cursor:not-allowed; }
+  .nav-button:hover:not(:disabled) {
+    background: rgba(100,200,255,0.2);
+  }
+
+  /* canonical quote */
+  .canon-quote {
+    margin:1rem 0; padding:0.8rem;
+    border-left:3px solid var(--accent-gold);
+    background: rgba(255,200,100,0.05);
+    font-style:italic;
+  }
+  .quote-src {
+    display:block; text-align:right;
+    font-size:0.8rem; color: var(--text-ter);
+    margin-top:0.4rem;
+  }
+  </style>
+</head>
+<body>
+
+<div class="mobile-container">
+  <div class="content-area" id="contentArea">
+
+    <!-- SPLASH -->
+    <div class="splash" id="splash">
+      <h1>Paṭicca-samuppāda</h1>
+      <small>scroll ↓ to begin</small>
+    </div>
+
+    <!-- INTRO -->
+    <section>
+      <h2 class="section-title">The Twelve Nidānas</h2>
+      <p class="section-sub">
+        How suffering—and its end—arise by dependent (paṭicca) links.
+      </p>
+      <div class="wheel-container">
+        <div class="wheel" id="wheelSvg"></div>
+        <div class="wheel-center">Dependent Arising</div>
+      </div>
+      <p class="canon-quote">
+        “When this is, that is; this arising, that arises.  
+        When this is not, that is not; this ceasing, that ceases.”  
+        <span class="quote-src">—SN 12.1</span>
+      </p>
+    </section>
+
+    <!-- NIDĀNAS -->
+    <section>
+      <ul class="nidana-list" id="nidanaList">
+        <!-- injected by JS -->
+      </ul>
+      <div class="nav-buttons">
+        <button class="nav-button" id="prevBtn" disabled>Previous</button>
+        <button class="nav-button" id="nextBtn">Next Nidāna</button>
+      </div>
+    </section>
+
+    <!-- TOOLTIP -->
+    <div class="tooltip" id="tooltip">
+      <h3 id="ttTitle"></h3>
+      <div id="ttContent"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ───────── DATA ─────────
+const nidanas = [
+  {
+    number:1, term:"avijjā", meaning:"Ignorance",
+    description:`Ignorance of the true nature of reality—mistaking impermanent for permanent, suffering for happiness, non-self for self.`,
+    quote:`“And what is ignorance? Not knowing suffering…not knowing the way leading to cessation of suffering”—this is avijjā.`,
+    source:"MN 9",
+    concepts:[
+      {title:"Root of Samsāra",content:"Avijjā is the fundamental misperception that fuels the cycle of rebirth."},
+      {title:"Three Characteristics",content:"It veils understanding of impermanence, dukkha, and non-self."}
+    ],
+    interlinear:`Avijjā = a + vijjā: “without” + “clear knowing” (wisdom).`
+  },
+  {
+    number:2, term:"saṅkhāra", meaning:"Formations",
+    description:`Volitional activities—bodily, verbal, mental—that shape karma and condition consciousness.`,
+    quote:`“These three are fabrications: bodily, verbal, mental.”—SN 12.2`,
+    source:"SN 12.2",
+    concepts:[
+      {title:"Threefold Definition",content:"Breath, thought, and perception."},
+      {title:"Karmic Fuel",content:"Saṅkhāras propel future existence."}
+    ],
+    interlinear:`Saṅkhāra = “that which puts together” (active) & “that which has been put together” (passive).`
+  },
+  {
+    number:3, term:"viññāṇa", meaning:"Consciousness",
+    description:`Awareness arising dependent on sense-organs and their objects; the link to next rebirth.`,
+    quote:`“Dependent on name & form, consciousness arises.”—SN 12.17`,
+    source:"SN 12.17",
+    concepts:[
+      {title:"Six Types",content:"Eye-consciousness, ear-consciousness, nose-, tongue-, body-, mind-consciousness."}
+    ],
+    interlinear:`Viññāṇa = cognizing, discriminating function of mind.`
+  },
+  {
+    number:4, term:"nāma-rūpa", meaning:"Name & Form",
+    description:`Name = mental factors (feeling, perception); Form = physical phenomena (body).`,
+    quote:`“Consciousness … takes name & form as object.”—SN 22.79`,
+    source:"SN 22.79",
+    concepts:[
+      {title:"Mind-Body Composite",content:"Nāma & rūpa inseparable in experience."}
+    ],
+    interlinear:`Nāma (nāma-dhamma) and rūpa together constitute psychophysical being.`
+  },
+  {
+    number:5, term:"saḷāyatana", meaning:"Six Sense Bases",
+    description:`Eye, ear, nose, tongue, body, mind—the bases for sense contact.`,
+    quote:`“Wherever there is eye, ear…mind, that is called sixfold base.”—SN 35.93`,
+    source:"SN 35.93",
+    concepts:[
+      {title:"Seat of Contact",content:"Basis for perception of all phenomena."}
+    ],
+    interlinear:`Saḷāyatana = “saḍ” (six) + āyatana (base).`
+  },
+  {
+    number:6, term:"phassa", meaning:"Contact",
+    description:`Coming together of sense-base, object, and consciousness—moment of contact.`,
+    quote:`“When contact is, there arises feeling.”—SN 12.20`,
+    source:"SN 12.20",
+    concepts:[
+      {title:"Triad",content:"Base, object, consciousness form phassa."}
+    ],
+    interlinear:`Phassa = “touching,” the spark of experience.`
+  },
+  {
+    number:7, term:"vedanā", meaning:"Feeling",
+    description:`Pleasant, unpleasant, or neutral sensation arising from contact.`,
+    quote:`“Feeling is the second link after contact.”—SN 12.20`,
+    source:"SN 12.20",
+    concepts:[
+      {title:"Three Kinds",content:"Pleasure, pain, neither."}
+    ],
+    interlinear:`Vedanā = “feeling tone,” not emotion in modern sense.`
+  },
+  {
+    number:8, term:"taṇhā", meaning:"Craving",
+    description:`Desire for more pleasant or for cessation of unpleasant feelings.`,
+    quote:`“Craving springs from feeling.”—SN 12.20`,
+    source:"SN 12.20",
+    concepts:[
+      {title:"Three Types",content:"Kāma-taṇhā, bhava-taṇhā, vibhava-taṇhā."}
+    ],
+    interlinear:`Taṇhā = “thirst,” rooted in misperception.`
+  },
+  {
+    number:9, term:"upādāna", meaning:"Clinging",
+    description:`Intense attachment to sensuality, views, rites, or self.`,
+    quote:`“Clinging leads to becoming.”—SN 12.20`,
+    source:"SN 12.20",
+    concepts:[
+      {title:"Four Kinds",content:"Sense-desire, views, rites, self-doctrine."}
+    ],
+    interlinear:`Upādāna = “fuel for the fires of becoming.”`
+  },
+  {
+    number:10, term:"bhava", meaning:"Becoming",
+    description:`Process of existence conditioning birth in next life or state.`,
+    quote:`“From clinging comes becoming.”—SN 12.20`,
+    source:"SN 12…
+  },
+  {
+    number:11, term:"jāti", meaning:"Birth",
+    description:`Entry into a new existence, physical or mental.`,
+    quote:`“Birth is the arising of the psychophysical organism.”—SN 12.20`,
+    source:"SN 12.20",
+    concepts:[],
+    interlinear:`Jāti = “arising,” beginning of new life.`
+  },
+  {
+    number:12, term:"jarā-maraṇa", meaning:"Aging & Death",
+    description:`Decaying and passing away of the formed being.`,
+    quote:`“Aging, death, sorrow, lamentation, pain…”—SN 22.73`,
+    source:"SN 22.73",
+    concepts:[],
+    interlinear:`Jarā = aging; maraṇa = death.`
+  }
+];
+
+// ───────── UTILITIES ─────────
+const svgNS = "http://www.w3.org/2000/svg";
+let currentIndex = 1;
+
+// ───────── BUILD WHEEL ─────────
+function buildWheel() {
+  const svg = document.createElementNS(svgNS,"svg");
+  svg.setAttribute("viewBox","0 0 300 300");
+  svg.setAttribute("width",300);
+  svg.setAttribute("height",300);
+  nidanas.forEach((n,i)=>{
+    const start = (i*360/12 - 90)*Math.PI/180;
+    const end   = ((i+1)*360/12 -90)*Math.PI/180;
+    const cx=150, cy=150, r=140;
+    const x1=cx + r*Math.cos(start), y1=cy + r*Math.sin(start);
+    const x2=cx + r*Math.cos(end),   y2=cy + r*Math.sin(end);
+    const d = [
+      `M ${cx},${cy}`,
+      `L ${x1},${y1}`,
+      `A ${r},${r} 0 0 1 ${x2},${y2}`,
+      "Z"
+    ].join(" ");
+    const path = document.createElementNS(svgNS,"path");
+    path.setAttribute("d",d);
+    path.setAttribute("fill","rgba(30,40,60,0.7)");
+    path.setAttribute("stroke", "var(--accent-gold)");
+    path.setAttribute("stroke-width","1");
+    path.classList.add("wheel-seg");
+    path.addEventListener("click",()=> selectNidana(n.number));
+    svg.appendChild(path);
+
+    // text label
+    const midAng = ((i+0.5)*360/12 -90)*Math.PI/180;
+    const tx = cx + (r-40)*Math.cos(midAng);
+    const ty = cy + (r-40)*Math.sin(midAng);
+    const txt = document.createElementNS(svgNS,"text");
+    txt.setAttribute("x",tx);
+    txt.setAttribute("y",ty+4);
+    txt.setAttribute("text-anchor","middle");
+    txt.setAttribute("font-size","10");
+    txt.setAttribute("fill","var(--text-ter)");
+    txt.textContent = n.number;
+    svg.appendChild(txt);
+  });
+  document.getElementById("wheelSvg").appendChild(svg);
+}
+
+// ───────── BUILD NIDANA LIST ─────────
+function buildList() {
+  const ul = document.getElementById("nidanaList");
+  nidanas.forEach(n => {
+    const li = document.createElement("li");
+    li.className="nidana-item";
+    li.id = "nidana-" + n.number;
+
+    const card = document.createElement("div");
+    card.className="nidana-card";
+
+    // header
+    const hdr = document.createElement("div");
+    hdr.className="nidana-header";
+    hdr.innerHTML=`
+      <div class="nidana-number">${n.number}.</div>
+      <div class="nidana-term">${n.term}</div>
+      <div class="nidana-meaning">${n.meaning}</div>
+      <div class="expand-icon">⌄</div>
+    `;
+    hdr.addEventListener("click",()=>{
+      card.classList.toggle("expanded");
+      adjustContent(card);
+    });
+    card.appendChild(hdr);
+
+    // content
+    const cnt = document.createElement("div");
+    cnt.className="nidana-content";
+    // description
+    const desc = document.createElement("p");
+    desc.className="nidana-desc";
+    desc.textContent = n.description;
+    cnt.appendChild(desc);
+    // canonical quote
+    if(n.quote){
+      const q = document.createElement("div");
+      q.className="canon-quote";
+      q.innerHTML=`${n.quote}<span class="quote-src">—${n.source}</span>`;
+      cnt.appendChild(q);
+    }
+    // concepts
+    n.concepts.forEach(c=>{
+      const ec = document.createElement("div");
+      ec.className="expandable-concept";
+      ec.textContent = c.title;
+      const cc = document.createElement("div");
+      cc.className="concept-content";
+      cc.textContent = c.content;
+      ec.addEventListener("click",()=>{
+        ec.classList.toggle("expanded");
+      });
+      cnt.appendChild(ec);
+      cnt.appendChild(cc);
+    });
+    // interlinear
+    if(n.interlinear){
+      const inter = document.createElement("div");
+      inter.className="interlinear";
+      inter.textContent = n.interlinear;
+      inter.addEventListener("click",()=> {
+        inter.classList.toggle("visible");
+      });
+      cnt.appendChild(inter);
+    }
+
+    card.appendChild(cnt);
+    li.appendChild(card);
+    ul.appendChild(li);
+  });
+}
+
+// adjust height when expanded
+function adjustContent(card) {
+  const cnt = card.querySelector(".nidana-content");
+  if(card.classList.contains("expanded")) {
+    cnt.style.height = cnt.scrollHeight + "px";
+  } else {
+    cnt.style.height = "0";
+  }
+}
+
+// ───────── NAVIGATION ─────────
+function selectNidana(idx) {
+  currentIndex = idx;
+  updateNav();
+  // highlight wheel segment
+  document.querySelectorAll(".wheel-seg")
+    .forEach((p,i)=> p.classList.toggle("active", i+1===idx));
+  // scroll it into view
+  document.querySelector("#nidana-"+idx)
+    .scrollIntoView({behavior:"smooth",block:"center"});
+}
+function updateNav(){
+  document.getElementById("prevBtn").disabled = currentIndex===1;
+  document.getElementById("nextBtn").disabled = currentIndex===nidanas.length;
+}
+document.getElementById("prevBtn")
+  .addEventListener("click",_=>selectNidana(currentIndex-1));
+document.getElementById("nextBtn")
+  .addEventListener("click",_=>selectNidana(currentIndex+1));
+
+// ───────── GLOSS TOOLTIP ─────────
+const tooltip = document.getElementById("tooltip");
+document.body.addEventListener("click",e=>{
+  const tgt = e.target.closest(".glossable");
+  if(tgt){
+    const title = tgt.dataset.title,
+          content = tgt.dataset.content;
+    document.getElementById("ttTitle").textContent = title||"";
+    document.getElementById("ttContent").textContent = content||"";
+    const rect = tgt.getBoundingClientRect();
+    tooltip.style.left = (rect.left + rect.width/2) + "px";
+    tooltip.style.top  = rect.top + window.pageYOffset + "px";
+    tooltip.classList.add("visible");
+  } else {
+    tooltip.classList.remove("visible");
+  }
+});
+
+// ───────── SCROLL HIDE SPLASH ─────────
+document.getElementById("contentArea")
+  .addEventListener("scroll", _=>{
+    document.getElementById("splash")
+      .classList.add("hide");
+  });
+
+// ───────── INIT ─────────
+buildWheel();
+buildList();
+updateNav();
+</script>
+
+</body>
+</html>
