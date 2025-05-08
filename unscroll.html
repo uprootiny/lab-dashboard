@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,7 +8,7 @@
     <style>
         /* 
          * Note: This is a static HTML file. 
-         * The CSS defines potential interactive states (like hover, active, visible classes), 
+         * The CSS defines the visual appearance and potential interactive states (like hover, active, visible classes), 
          * data attributes for substitutions and translations, and elements for dynamic features 
          * (tooltip, settings, semantic map, cursor, tap feedback).
          * However, without accompanying JavaScript, these features will *not* be functional.
@@ -104,7 +105,7 @@
         
         .text-scene {
             flex-grow: 1; /* Allow text-scene to fill container height */
-            position: relative; /* Keep relative for absolute children positioning */
+            position: relative; /* Keep relative for absolute children positioning like cursor */
             width: 100%;
             height: 100%; /* Set height to fill flex container */
             transform-style: preserve-3d;
@@ -255,7 +256,7 @@
             position: absolute;
             top: 0;
             left: 0;
-right: 0;
+            right: 0;
             bottom: 0;
             background: rgba(30, 40, 60, 0.15); /* Background element */
             border-radius: 0.35em;
@@ -875,12 +876,12 @@ right: 0;
                 <span class="word">a</span>
                 <span class="word multi-substitution" id="word-1" tabindex="0" 
                     data-word="history" 
-                    data-alternatives="past,origin,lineage,etymology,background,story,record,chronicle,evolution,ancestry,roots,heritage,tradition,development">
+                    data-alternatives="past,origin,lineage,etymology,background,story,record,chronicle,evolution,ancestry,roots,heritage,tradition,development,provenance,descent,trace">
                     <span class="current-text">history,</span>
                 </span>
                  <span class="word multi-substitution" id="word-2" tabindex="0" 
                     data-word="resonance," 
-                    data-alternatives="echo,vibration,undertone,aura,feeling,quality,timbre,implication,suggestion,overtone,sense,spirit,essence,flavor">
+                    data-alternatives="echo,vibration,undertone,aura,feeling,quality,timbre,implication,suggestion,overtone,sense,spirit,essence,flavor,bloom,sympathy,rapport,depth">
                     <span class="current-text">resonance,</span>
                  </span>
                  <span class="word">and</span>
@@ -889,15 +890,19 @@ right: 0;
                  <span class="word">these</span>
                  <span class="word background">dimensions</span>
                  <span class="word">allows</span>
-                 <span class="word">us</span>
+                 <span class="word background-accent">us</span>
                  <span class="word">to</span>
-                 <span class="word">perceive</span>
+                 <span class="word foreground-gold">perceive</span>
                  <span class="word gradient-text-alt">text</span>
                  <span class="word">as</span>
                  <span class="word foreground">a</span>
                  <span class="word background">living,</span>
                  <span class="word floating">breathing</span>
-                 <span class="word foreground-gold">entity.</span>
+                 <span class="word multi-substitution" id="word-3" tabindex="0" 
+                    data-word="entity." 
+                    data-alternatives="being,form,structure,system,presence,substance,essence,principle,reality,whole,organism,complex,manifestation">
+                    <span class="current-text">entity.</span>
+                 </span>
             </p>
 
             <p class="commentary">
@@ -907,31 +912,31 @@ right: 0;
             <!-- Extended Tao Te Ching Excerpt -->
             <div class="centered-poetry">
                 <div class="poetry-line" style="transform: translateZ(8px);">
-                    <span class="foreign-text chinese pulse-glow-mint" data-translation="The Way that can be told is not the eternal Way;" data-source="Tao Te Ching, Chapter 1" tabindex="0">道可道，非常道；</span>
+                    <span class="foreign-text chinese pulse-glow-mint floating" data-translation="The Way that can be told is not the eternal Way;" data-source="Tao Te Ching, Chapter 1" tabindex="0">道可道，非常道；</span>
                 </div>
                 <div class="poetry-line">
                     <span class="foreign-text chinese" data-translation="The name that can be named is not the eternal name." data-source="Tao Te Ching, Chapter 1" tabindex="0">名可名，非常名。</span>
                 </div>
                 <div class="poetry-line" style="margin-top: 1.5rem; transform: translateZ(6px);">
-                    <span class="foreign-text chinese foreground-mint floating" data-translation="The Way is empty, yet use will not drain it." data-source="Tao Te Ching, Chapter 4" tabindex="0">道沖而用之，或不盈。</span>
+                    <span class="foreign-text chinese foreground-mint floating-more" data-translation="The Way is empty, yet use will not drain it." data-source="Tao Te Ching, Chapter 4" tabindex="0">道沖而用之，或不盈。</span>
                 </div>
                  <div class="poetry-line">
                     <span class="foreign-text chinese" data-translation="It is like the ancestor of all things." data-source="Tao Te Ching, Chapter 4" tabindex="0">淵兮似萬物之宗。</span>
                 </div>
                  <div class="poetry-line" style="margin-top: 1.5rem; transform: translateZ(8px);">
-                    <span class="foreign-text chinese pulse-glow-mint" data-translation="Thirty spokes share one hub;" data-source="Tao Te Ching, Chapter 11" tabindex="0">三十輻，共一轂；</span>
+                    <span class="foreign-text chinese pulse-glow-mint floating" data-translation="Thirty spokes share one hub;" data-source="Tao Te Ching, Chapter 11" tabindex="0">三十輻，共一轂；</span>
                 </div>
                 <div class="poetry-line">
                     <span class="foreign-text chinese" data-translation="Empty space around the hub makes a wheel useful." data-source="Tao Te Ching, Chapter 11" tabindex="0">當其無，有車之用。</span>
                 </div>
                 <div class="poetry-line" style="margin-top: 0.8rem; transform: translateZ(6px);">
-                    <span class="foreign-text chinese foreground-mint floating" data-translation="Clay is shaped into vessels;" data-source="Tao Te Ching, Chapter 11" tabindex="0">埏埴以為器；</span>
+                    <span class="foreign-text chinese foreground-mint floating-more" data-translation="Clay is shaped into vessels;" data-source="Tao Te Ching, Chapter 11" tabindex="0">埏埴以為器；</span>
                 </div>
                 <div class="poetry-line">
                     <span class="foreign-text chinese" data-translation="the empty space within makes vessels useful." data-source="Tao Te Ching, Chapter 11" tabindex="0">當其無，有器之用。</span>
                 </div>
                 <div class="poetry-line" style="margin-top: 0.8rem; transform: translateZ(8px);">
-                    <span class="foreign-text chinese pulse-glow-mint" data-translation="Doors and windows are cut for a room;" data-source="Tao Te Ching, Chapter 11" tabindex="0">鑿戶牖以為室；</span>
+                    <span class="foreign-text chinese pulse-glow-mint floating" data-translation="Doors and windows are cut for a room;" data-source="Tao Te Ching, Chapter 11" tabindex="0">鑿戶牖以為室；</span>
                 </div>
                 <div class="poetry-line">
                     <span class="foreign-text chinese" data-translation="the empty space within makes a room useful." data-source="Tao Te Ching, Chapter 11" tabindex="0">當其無，有室之用。</span>
@@ -940,66 +945,70 @@ right: 0;
                     <span class="foreign-text chinese" data-translation="Thus, existence is for possession;" data-source="Tao Te Ching, Chapter 11" tabindex="0">故有之以為利；</span>
                 </div>
                  <div class="poetry-line" style="transform: translateZ(8px);">
-                    <span class="foreign-text chinese pulse-glow-mint floating" data-translation="Non-existence is for function." data-source="Tao Te Ching, Chapter 11" tabindex="0">無之以為用。</span>
+                    <span class="foreign-text chinese pulse-glow-mint floating-more" data-translation="Non-existence is for function." data-source="Tao Te Ching, Chapter 11" tabindex="0">無之以為用。</span>
                 </div>
             </div>
             
             <p class="paragraph">
                 <span class="word">Laozi</span>
                  <span class="word background">guides</span>
-                 <span class="word">us</span>
-                 <span class="word background-accent">towards</span>
+                 <span class="word background-accent">us</span>
+                 <span class="word foreground-mint">towards</span>
                  <span class="word">a</span>
-                 <span class="word foreground">perception</span>
-                 <span class="word">where</span>
-                 <span class="word gradient-text-alt">meaning</span>
+                 <span class="word foreground pulse-glow">perception</span>
+                 <span class="word background-accent">where</span>
+                 <span class="word gradient-text-alt floating">meaning</span>
                  <span class="word">is</span>
                  <span class="word background">found</span>
-                 <span class="word multi-substitution" id="word-3" tabindex="0" 
+                 <span class="word multi-substitution" id="word-4" tabindex="0" 
                     data-word="not" 
-                    data-alternatives="seldom,rarely,infrequently,hardly,barely,scarcely,never,minimally,not solely,not always">
+                    data-alternatives="seldom,rarely,infrequently,hardly,barely,scarcely,never,minimally,not solely,not always,not merely,primarily not,principally not">
                     <span class="current-text">not</span>
                  </span>
                  <span class="word">only</span>
-                 <span class="word">in</span>
+                 <span class="word background-accent">in</span>
                  <span class="word background">what</span>
                  <span class="word floating">is</span>
                  <span class="word foreground pulse-glow">present</span>
                  <span class="word">and</span>
                  <span class="word background">named,</span>
                  <span class="word background-accent">but</span>
-                 <span class="word">also</span>
+                 <span class="word foreground-gold">also</span>
                  <span class="word">in</span>
-                 <span class="word multi-substitution" id="word-4" tabindex="0" 
+                 <span class="word multi-substitution" id="word-5" tabindex="0" 
                     data-word="emptiness," 
-                    data-alternatives="void,absence,space,nothingness,vacuity,blankness,stillness,silence,gap,interval,lack,unmanifest,potential">
+                    data-alternatives="void,absence,space,nothingness,vacuity,blankness,stillness,silence,gap,interval,lack,unmanifest,potential,negativity,recess,interstice">
                     <span class="current-text">emptiness,</span>
                  </span>
-                 <span class="word">the</span>
-                 <span class="word background">spaces</span>
+                 <span class="word background">the</span>
+                 <span class="word floating-more">spaces</span>
                  <span class="word background-accent">between</span>
-                 <span class="word">things,</span>
+                 <span class="word foreground-mint">things,</span>
                  <span class="word">the</span>
-                 <span class="word foreground-gold pulse-glow-gold floating">potential</span>
+                 <span class="word multi-substitution" id="word-6" tabindex="0" 
+                    data-word="potential" 
+                    data-alternatives="possibility,capacity,promise,power,ability,readiness,likelihood,dormancy,virtuality,latency,aptitude,prospect">
+                    <span class="current-text">potential</span>
+                 </span>
                  <span class="word">of</span>
                  <span class="word background">non-being.</span>
-                 <span class="word">This</span>
+                 <span class="word foreground">This</span>
                  <span class="word">is</span>
-                 <span class="word background">a</span>
-                 <span class="word multi-substitution" id="word-5" tabindex="0" 
+                 <span class="word background-accent">a</span>
+                 <span class="word multi-substitution" id="word-7" tabindex="0" 
                     data-word="fundamental" 
-                    data-alternatives="core,essential,basic,primary,underlying,foundational,principal,key,critical,vital,radical,inherent,intrinsic">
+                    data-alternatives="core,essential,basic,primary,underlying,foundational,principal,key,critical,vital,radical,inherent,intrinsic,cornerstone,bedrock,crucial">
                     <span class="current-text">fundamental</span>
                  </span>
-                 <span class="word">aspect</span>
+                 <span class="word background">aspect</span>
                  <span class="word">of</span>
                  <span class="word gradient-text">understanding</span>
-                 <span class="word background">the</span>
-                 <span class="word floating-more">Tao.</span>
+                 <span class="word background-accent">the</span>
+                 <span class="word floating-more pulse-glow-magenta">Tao.</span>
             </p>
 
             <p class="commentary">
-                The structure of language itself, with its necessary spaces and unspoken assumptions, mirrors this concept of useful emptiness.
+                The structure of language itself, with its necessary spaces and unspoken assumptions, mirrors this concept of useful emptiness. Meaning often exists in the connections *between* words, not just the words themselves.
             </p>
             
             <!-- Extended Rumi Excerpt -->
@@ -1008,42 +1017,48 @@ right: 0;
                     <span class="foreign-text persian pulse-glow-gold floating-more" data-translation="Beyond ideas of wrongdoing and rightdoing there is a field." data-source="Jalal ad-Din Muhammad Rumi, Masnavi" tabindex="0">آن سوی اندیشه‌های بد و خوب، دشتی است</span>
                 </div>
                 <div class="poetry-line">
-                    <span class="foreign-text persian" data-translation="I'll meet you there." data-source="Jalal ad-Din Muhammad Rumi, Masnavi" tabindex="0">آنجا با تو دیدار خواهم کرد.</span>
+                    <span class="foreign-text persian foreground-gold" data-translation="I'll meet you there." data-source="Jalal ad-Din Muhammad Rumi, Masnavi" tabindex="0">آنجا با تو دیدار خواهم کرد.</span>
                 </div>
                 <div class="poetry-line" style="transform: translateZ(6px);">
-                    <span class="foreign-text persian foreground-gold floating" data-translation="When the soul lies down in that grass" data-source="Jalal ad-Din Muhammad Rumi, Masnavi" tabindex="0">چون جان در آن چمن آرمید</span>
+                    <span class="foreign-text persian floating" data-translation="When the soul lies down in that grass" data-source="Jalal ad-Din Muhammad Rumi, Masnavi" tabindex="0">چون جان در آن چمن آرمید</span>
                 </div>
                  <div class="poetry-line" style="transform: translateZ(8px);">
                     <span class="foreign-text persian pulse-glow-gold floating-more" data-translation="the world is too full to talk about." data-source="Jalal ad-Din Muhammad Rumi, Masnavi" tabindex="0">جهان لبریز است از گفتن</span>
                 </div>
                  <div class="poetry-line" style="margin-top: 2rem; transform: translateZ(8px);">
-                    <span class="foreign-text persian pulse-glow-magenta" data-translation="Look at the soul, how it is mixed with the body." data-source="Jalal ad-Din Muhammad Rumi, Great Secret" tabindex="0">نگر اندر جان که با تن چون شریک است</span>
+                    <span class="foreign-text persian pulse-glow-magenta floating" data-translation="Look at the soul, how it is mixed with the body." data-source="Jalal ad-Din Muhammad Rumi, Great Secret" tabindex="0">نگر اندر جان که با تن چون شریک است</span>
                 </div>
                  <div class="poetry-line">
                     <span class="foreign-text persian foreground-magenta" data-translation="Yet neither is each other." data-source="Jalal ad-Din Muhammad Rumi, Great Secret" tabindex="0">نه او اوست و نه این این است</span>
                 </div>
                  <div class="poetry-line" style="margin-top: 1.5rem; transform: translateZ(6px);">
-                    <span class="foreign-text persian foreground-gold" data-translation="You are a spirit, and your companion is a body." data-source="Jalal ad-Din Muhammad Rumi, Mathnawi, Book I" tabindex="0">تو روحی و این همدم تو تن است</span>
+                    <span class="foreign-text persian foreground-gold floating-more" data-translation="You are a spirit, and your companion is a body." data-source="Jalal ad-Din Muhammad Rumi, Mathnawi, Book I" tabindex="0">تو روحی و این همدم تو تن است</span>
                 </div>
                  <div class="poetry-line" style="transform: translateZ(8px);">
-                    <span class="foreign-text persian pulse-glow-magenta" data-translation="You are a rose, and your companion is the thorn." data-source="Jalal ad-Din Muhammad Rumi, Mathnawi, Book I" tabindex="0">تو وردی و این همدم تو خاربن است</span>
+                    <span class="foreign-text persian pulse-glow-magenta floating" data-translation="You are a rose, and your companion is the thorn." data-source="Jalal ad-Din Muhammad Rumi, Mathnawi, Book I" tabindex="0">تو وردی و این همدم تو خاربن است</span>
+                </div>
+                 <div class="poetry-line" style="margin-top: 0.8rem; transform: translateZ(6px);">
+                    <span class="foreign-text persian foreground-gold" data-translation="Water takes the color of the vessel that contains it," data-source="Jalal ad-Din Muhammad Rumi, Mathnawi, Book II" tabindex="0">آب در کشتی چو باشد موکشان</span>
+                </div>
+                 <div class="poetry-line" style="transform: translateZ(8px);">
+                    <span class="foreign-text persian pulse-glow-gold floating-more" data-translation="but the water itself is pure and clear." data-source="Jalal ad-Din Muhammad Rumi, Mathnawi, Book II" tabindex="0">آب صافی را بگیرد رنگ آن</span>
                 </div>
             </div>
 
             <p class="paragraph">
                 <span class="word">Rumi's</span>
                 <span class="word background">verses</span>
-                <span class="word">guide</span>
-                <span class="word">us</span>
+                <span class="word background-accent">guide</span>
+                <span class="word foreground-mint">us</span>
                 <span class="word">to</span>
-                <span class="word multi-substitution" id="word-6" tabindex="0" 
+                <span class="word multi-substitution" id="word-8" tabindex="0" 
                     data-word="transcend" 
-                    data-alternatives="go beyond,rise above,surpass,exceed,overcome,escape,outstrip,override,leapfrog,outdo,move past,elevate,bypass,cross,pierce,penetrate">
+                    data-alternatives="go beyond,rise above,surpass,exceed,overcome,escape,outstrip,override,leapfrog,outdo,move past,elevate,bypass,cross,pierce,penetrate,leave behind">
                     <span class="current-text">transcend</span>
                  </span>
-                 <span class="word multi-substitution" id="word-7" tabindex="0" 
+                 <span class="word multi-substitution" id="word-9" tabindex="0" 
                     data-word="duality," 
-                    data-alternatives="separation,division,contrast,opposition,polarity,otherness,difference,schism,split,contrast,pair,binary,dichotomy,partisanship">
+                    data-alternatives="separation,division,contrast,opposition,polarity,otherness,difference,schism,split,contrast,pair,binary,dichotomy,partisanship,categorization,distinction,conflict">
                     <span class="current-text">duality,</span>
                  </span>
                  <span class="word">to</span>
@@ -1054,125 +1069,153 @@ right: 0;
                  <span class="word background-accent">in</span>
                  <span class="word">a</span>
                  <span class="word background">space</span>
-                 <span class="word">of</span>
-                 <span class="word foreground-mint">pure</span>
-                 <span class="word gradient-text-alt pulse-glow-mint">experience.</span>
-                 <span class="word">His</span>
-                 <span class="word background">words</span>
-                 <span class="word">point</span>
+                 <span class="word foreground-mint pulse-glow-mint">of</span>
+                 <span class="word gradient-text-alt floating-more">pure</span>
+                 <span class="word multi-substitution" id="word-10" tabindex="0" 
+                    data-word="experience." 
+                    data-alternatives="being,awareness,presence,perception,existence,reality,moment,here and now,suchness,isness,life,insight,feeling,consciousness">
+                    <span class="current-text">experience.</span>
+                 </span>
+                 <span class="word background">His</span>
+                 <span class="word foreground-gold">words</span>
+                 <span class="word background-accent">point</span>
                  <span class="word">towards</span>
-                 <span class="word">the</span>
-                 <span class="word multi-substitution" id="word-8" tabindex="0" 
+                 <span class="word multi-substitution" id="word-11" tabindex="0" 
+                    data-word="the" 
+                    data-alternatives="that,this,a,the ultimate,the true,the ineffable,the boundless">
+                    <span class="current-text">the</span>
+                 </span>
+                 <span class="word multi-substitution" id="word-12" tabindex="0" 
                     data-word="unitive" 
-                    data-alternatives="unified,single,whole,integrated,connected,merged,blended,harmonious,total,complete,indivisible,singular,universal,absolute">
+                    data-alternatives="unified,single,whole,integrated,connected,merged,blended,harmonious,total,complete,indivisible,singular,universal,absolute,non-dual,transcendent">
                     <span class="current-text">unitive</span>
                  </span>
                  <span class="word background">state,</span>
-                 <span class="word">the</span>
-                 <span class="word floating-more">field</span>
-                 <span class="word">beyond</span>
-                 <span class="word background-accent">judgment,</span>
-                 <span class="word">where</span>
-                 <span class="word">the</span>
-                 <span class="word foreground floating">soul</span>
-                 <span class="word">rests</span>
-                 <span class="word background">in</span>
-                 <span class="word foreground-gold">itself.</span>
+                 <span class="word gradient-text floating">the</span>
+                 <span class="word foreground floating-more">field</span>
+                 <span class="word background-accent">beyond</span>
+                 <span class="word foreground-mint">judgment,</span>
+                 <span class="word background">where</span>
+                 <span class="word floating">the</span>
+                 <span class="word foreground-gold pulse-glow-gold">soul</span>
+                 <span class="word background-accent">rests</span>
+                 <span class="word">in</span>
+                 <span class="word multi-substitution" id="word-13" tabindex="0" 
+                    data-word="itself." 
+                    data-alternatives="being,truth,reality,essence,origin,source,Tao,the field,the void,the light,the beloved">
+                    <span class="current-text">itself.</span>
+                 </span>
             </p>
 
              <p class="commentary">
-                 The interwoven nature of concepts, like soul and body, or rose and thorn, is reflected in the interconnectedness of words and their meanings.
+                 The interwoven nature of concepts, like soul and body, or rose and thorn, is reflected in the interconnectedness of words and their meanings. True understanding lies not in rigid definitions, but in recognizing the flowing, pure essence that underlies appearances.
              </p>
 
             <p class="paragraph">
-                <span class="word">This</span>
-                <span class="word multi-substitution" id="word-9" tabindex="0" 
+                <span class="word foreground-mint">This</span>
+                <span class="word multi-substitution" id="word-14" tabindex="0" 
                     data-word="exploration" 
-                    data-alternatives="journey,voyage,expedition,adventure,quest,inquiry,study,analysis,investigation,research,dive,probe,venture,pursuit,deep dive,excavation,mapping">
+                    data-alternatives="journey,voyage,expedition,adventure,quest,inquiry,study,analysis,investigation,research,dive,probe,venture,pursuit,deep dive,excavation,mapping,uncovering">
                     <span class="current-text">exploration</span>
                  </span>
                  <span class="word background">of</span>
-                 <span class="word gradient-text pulse-glow">dimensional</span>
-                 <span class="word background">typography</span>
-                 <span class="word">is</span>
+                 <span class="word gradient-text pulse-glow floating">dimensional</span>
+                 <span class="word background-accent">typography</span>
+                 <span class="word foreground">is</span>
                  <span class="word">an</span>
                  <span class="word foreground-gold">attempt</span>
-                 <span class="word floating">to</span>
+                 <span class="word floating-more">to</span>
                  <span class="word background">visualize</span>
-                 <span class="word">the</span>
+                 <span class="word multi-substitution" id="word-15" tabindex="0" 
+                    data-word="the" 
+                    data-alternatives="these,those,all,the hidden,the subtle,the deep,the intricate">
+                    <span class="current-text">the</span>
+                 </span>
                  <span class="word foreground pulse-glow-mint">layers</span>
                  <span class="word background-accent">of</span>
-                 <span class="word multi-substitution" id="word-10" tabindex="0" 
+                 <span class="word multi-substitution" id="word-16" tabindex="0" 
                     data-word="meaning" 
-                    data-alternatives="significance,import,essence,purpose,value,sense,denotation,connotation,implication,gist,substance,core,depth,nuance,texture,richness">
+                    data-alternatives="significance,import,essence,purpose,value,sense,denotation,connotation,implication,gist,substance,core,depth,nuance,texture,richness,associations">
                     <span class="current-text">meaning</span>
                  </span>
                  <span class="word">and</span>
                  <span class="word foreground-mint">the</span>
                  <span class="word background">unseen</span>
-                 <span class="word floating-more">structures</span>
+                 <span class="word floating">structures</span>
                  <span class="word">within</span>
-                 <span class="word gradient-text-alt pulse-glow-magenta">language</span>
-                 <span class="word">itself.</span>
-                 <span class="word">It</span>
+                 <span class="word gradient-text-alt pulse-glow-magenta floating-more">language</span>
+                 <span class="word background-accent">itself.</span>
+                 <span class="word foreground-gold">It</span>
                  <span class="word">is</span>
                  <span class="word background">a</span>
-                 <span class="word multi-substitution" id="word-11" tabindex="0" 
+                 <span class="word multi-substitution" id="word-17" tabindex="0" 
                     data-word="glimpse" 
-                    data-alternatives="look,peek,view,sight,impression,sense,intuition,inkling,hint,flash,moment,taste,sample">
+                    data-alternatives="look,peek,view,sight,impression,sense,intuition,inkling,hint,flash,moment,taste,sample,window,door,portal">
                     <span class="current-text">glimpse</span>
                  </span>
-                 <span class="word">into</span>
-                 <span class="word">the</span>
-                 <span class="word foreground-mint">network</span>
+                 <span class="word background-accent">into</span>
+                 <span class="word foreground">the</span>
+                 <span class="word multi-substitution" id="word-18" tabindex="0" 
+                    data-word="network" 
+                    data-alternatives="web,fabric,structure,system,tapestry,matrix,interconnections,relations,pattern,lattice,graph,tree,chain,ring">
+                    <span class="current-text">network</span>
+                 </span>
                  <span class="word">of</span>
                  <span class="word background">thought</span>
                  <span class="word">and</span>
-                 <span class="word multi-substitution" id="word-12" tabindex="0" 
+                 <span class="word multi-substitution" id="word-19" tabindex="0" 
                     data-word="feeling" 
-                    data-alternatives="emotion,sense,perception,intuition,awareness,consciousness,vibration,resonance,mood,sentiment">
+                    data-alternatives="emotion,sense,perception,intuition,awareness,consciousness,vibration,resonance,mood,sentiment,qualia,experience">
                     <span class="current-text">feeling</span>
                  </span>
-                 <span class="word">that</span>
-                 <span class="word background-accent">shapes</span>
+                 <span class="word background-accent">that</span>
+                 <span class="word foreground-mint">shapes</span>
                  <span class="word">how</span>
-                 <span class="word">we</span>
+                 <span class="word background">we</span>
                  <span class="word foreground-gold pulse-glow floating">perceive</span>
-                 <span class="word background">the</span>
+                 <span class="word background-accent">the</span>
                  <span class="word foreground-mint">world,</span>
                  <span class="word background">and</span>
                  <span class="word foreground">our</span>
                  <span class="word background">place</span>
-                 <span class="word foreground floating-more">within</span>
-                 <span class="word background">it.</span>
+                 <span class="word floating-more pulse-glow">within</span>
+                 <span class="word multi-substitution" id="word-20" tabindex="0" 
+                    data-word="it." 
+                    data-alternatives="that reality,existence,the cosmos,the universe,the whole,the field,the Tao,being">
+                    <span class="current-text">it.</span>
+                 </span>
             </p>
 
-             <p class="commentary">
-                 By making the hidden connections and variations visible, even metaphorically, we can appreciate the richness and complexity underlying communication.
+             <p class="commentary" style="margin-bottom: 5rem;">
+                 By making the hidden connections and variations visible, even metaphorically, we can appreciate the richness and complexity underlying communication and thought.
              </p>
-            
+
             <p class="paragraph" style="margin-bottom: 5rem;">
-                 <span class="word">Ultimately,</span>
-                 <span class="word">the</span>
-                 <span class="word multi-substitution" id="word-13" tabindex="0" 
+                 <span class="word background-accent">Ultimately,</span>
+                 <span class="word foreground-mint">the</span>
+                 <span class="word multi-substitution" id="word-21" tabindex="0" 
                     data-word="deepest" 
-                    data-alternatives="most profound,innermost,core,essential,fundamental,ultimate,innate,truest,richest,fullest,deep-seated,buried,hidden">
+                    data-alternatives="most profound,innermost,core,essential,fundamental,ultimate,innate,truest,richest,fullest,deep-seated,buried,hidden,transcendent,subtlest,absolute">
                     <span class="current-text">deepest</span>
                  </span>
                  <span class="word background">understandings</span>
-                 <span class="word gradient-text">transcend</span>
-                 <span class="word background">language,</span>
-                 <span class="word">but</span>
-                 <span class="word foreground floating">language</span>
-                 <span class="word">remains</span>
-                 <span class="word background-accent">our</span>
+                 <span class="word gradient-text pulse-glow-magenta">transcend</span>
+                 <span class="word background-accent">language,</span>
+                 <span class="word foreground-gold">but</span>
+                 <span class="word multi-substitution" id="word-22" tabindex="0" 
+                    data-word="language" 
+                    data-alternatives="words,text,discourse,communication,semantics,lexicon,vocabulary,terms,speech,prose,poetry">
+                    <span class="current-text">language</span>
+                 </span>
+                 <span class="word floating-more">remains</span>
+                 <span class="word background">our</span>
                  <span class="word foreground-mint pulse-glow-mint">primary</span>
-                 <span class="word background">tool</span>
-                 <span class="word">for</span>
-                 <span class="word foreground-gold">approaching</span>
-                 <span class="word multi-substitution" id="word-14" tabindex="0" 
+                 <span class="word background-accent">tool</span>
+                 <span class="word foreground">for</span>
+                 <span class="word floating">approaching</span>
+                 <span class="word multi-substitution" id="word-23" tabindex="0" 
                     data-word="them." 
-                    data-alternatives="those truths,that reality,the Tao,the field,the mysteries,the essence,the unitive,the depth,the source">
+                    data-alternatives="those truths,that reality,the Tao,the field,the mysteries,the essence,the unitive,the depth,the source,the ineffable,absolute truth,ultimate reality">
                     <span class="current-text">them.</span>
                  </span>
             </p>
